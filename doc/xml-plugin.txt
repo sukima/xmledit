@@ -21,7 +21,7 @@ following tags will not auto complete:
 
 If the file edited is of type 'html' and 'xml_use_xhtml' is defined the above
 tags will autocomplete the xml closing staying xhtml compatable.
-ex. <hr> becomes <br /> (see |xml-plugin-settings|)
+ex. <hr> becomes <hr /> (see |xml-plugin-settings|)
 
 Note: If you used the VIM 5.x version of this file (xmledit.vim) you'll need to
 comment out the section where you called it. It is no longer used in the
