@@ -1,6 +1,6 @@
 " Vim script file
 " FileType:	XML
-" Maintainer:	Devin Weaver <devin@tritarget.com>
+" Maintainer:	Devin Weaver <vim@tritarget.com>
 " Last Change:  $Date$
 " Version:      $Revision$
 " Location:	http://tritarget.com/pub/vim/ftplugin/xml.vim

@@ -16,7 +16,7 @@ Note: If you used the VIM 5.x version of this file (xmledit.vim) you'll need to
 comment out the section where you called it. It is no longer used in the
 VIM 6.x version. 
 
-Maintainer: Devin Weaver <devin@tritarget.com>
+Maintainer: Devin Weaver <vim@tritarget.com>
 Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
 
