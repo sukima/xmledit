@@ -639,17 +639,17 @@ finish
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 === START_DOC
                                                 *xml-plugin.txt* *xmledit.vim*
-XML Edit {{{2                                                        #version#
+XML Edit {{{2                                                        #version# ~
 
 A filetype plugin to help edit XML and SGML documents.
 
-This script provides some convenience when editing XML (and some SGML including
-HTML) formated documents. It allows you to jump to the beginning or end of the
-tag block your cursor is in. '%' will jump between '<' and '>' within the tag
-your cursor is in. When in insert mode and you finish a tag (pressing '>') the
-tag will be completed. If you press '>' twice it will complete the tag and
-place the cursor in the middle of the tags on it's own line (helps with nested
-tags).
+This script provides some convenience when editing XML (and some SGML
+including HTML) formated documents. It allows you to jump to the beginning
+or end of the tag block your cursor is in. '%' will jump between '<' and '>'
+within the tag your cursor is in. When in insert mode and you finish a tag
+(pressing '>') the tag will be completed. If you press '>' twice it will
+complete the tag and place the cursor in the middle of the tags on it's own
+line (helps with nested tags).
 
 Usage: Place this file into your ftplugin directory. To add html support
 Sym-link or copy this file to html.vim in your ftplugin directory. To activte
@@ -664,17 +664,11 @@ If the file edited is of type 'html' and 'xml_use_xhtml' is defined the above
 tags will autocomplete the xml closing staying xhtml compatable.
 ex. <hr> becomes <hr /> (see |xml-plugin-settings|)
 
-Note: If you used the VIM 5.x version of this file (xmledit.vim) you'll need to
-comment out the section where you called it. It is no longer used in the
+NOTE: If you used the VIM 5.x version of this file (xmledit.vim) you'll need
+to comment out the section where you called it. It is no longer used in the
 VIM 6.x version. 
 
-Maintainer: Devin Weaver <vim@tritarget.com>
-Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
-Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
-Kudos to "Guo-Peng Wen" for the self install documentation code.
-
-Known Bugs {{{2
-----------
+Known Bugs {{{2 ~
 
 - This script will modify registers ". and "x; register "" will be restored.
 - < & > marks inside of a CDATA section are interpreted as actual XML tags
@@ -687,16 +681,18 @@ Known Bugs {{{2
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
-Mappings {{{2                                           *xml-plugin-mappings*
---------
+------------------------------------------------------------------------------
+							 *xml-plugin-mappings*
+Mappings {{{2 ~
 
-<LocalLeader> is a setting in VIM that depicts a prefix for scripts and plugins to
-use. By default this is the backslash key `\'. See |mapleader| for details.
+<LocalLeader> is a setting in VIM that depicts a prefix for scripts and
+plugins to use. By default this is the backslash key `\'. See |mapleader|
+for details.
 
 <LocalLeader>x
-        Visual - Place a custom XML tag to suround the selected text. You need
-        to have selected text in visual mode before you can use this mapping.
-        See |visual-mode| for details.
+	Visual - Place a custom XML tag to suround the selected text. You
+	need to have selected text in visual mode before you can use this
+	mapping. See |visual-mode| for details.
 
 <LocalLeader>.   or      <LocalLeader>>
         Insert - Place a literal '>' without parsing tag.
@@ -713,41 +709,45 @@ use. By default this is the backslash key `\'. See |mapleader| for details.
             ^
 <
 
-Options {{{2                                            *xml-plugin-settings*
--------
+------------------------------------------------------------------------------
+							 *xml-plugin-settings*
+Options {{{2 ~
 
-(All options must be placed in your |.vimrc| prior to the |ftplugin| command.)
+(All options must be placed in your |.vimrc| prior to the |ftplugin|
+command.)
 
 xml_tag_completion_map
-        Use this setting to change the default mapping to auto complete a tag.
-        By default typing a literal `>' will cause the tag your editing to auto
-        complete; pressing twice will auto nest the tag. By using this setting
-        the `>' will be a literal `>' and you must use the new mapping to
-        perform auto completion and auto nesting. For example if you wanted
-        Control-L to perform auto completion inmstead of typing a `>' place the
-        following into your .vimrc: >
+	Use this setting to change the default mapping to auto complete a
+	tag. By default typing a literal `>' will cause the tag your editing
+	to auto complete; pressing twice will auto nest the tag. By using
+	this setting the `>' will be a literal `>' and you must use the new
+	mapping to perform auto completion and auto nesting. For example if
+	you wanted Control-L to perform auto completion inmstead of typing a
+	`>' place the following into your .vimrc: >
             let xml_tag_completion_map = "<C-l>"
 <
 xml_no_auto_nesting
-        This turns off the auto nesting feature. After a completion is made and
-        another `>' is typed xml-edit automatically will break the tag accross
-        multiple lines and indent the curser to make creating nested tqags
-        easier. This feature turns it off. Enter the following in your .vimrc: >
+	This turns off the auto nesting feature. After a completion is made
+	and another `>' is typed xml-edit automatically will break the tag
+	accross multiple lines and indent the curser to make creating nested
+	tqags easier. This feature turns it off. Enter the following in your
+	.vimrc: >
             let xml_no_auto_nesting = 1
 <
 xml_use_xhtml
-        When editing HTML this will auto close the short tags to make
-        valid XML like <hr /> and <br />. Enter the following in your vimrc to
-        turn this option on: >
+	When editing HTML this will auto close the short tags to make valid
+	XML like <hr /> and <br />. Enter the following in your vimrc to
+	turn this option on: >
             let xml_use_xhtml = 1
 <
 xml_no_html
-        This turns of the support for HTML specific tags. Place this in your
+	This turns of the support for HTML specific tags. Place this in your
         .vimrc: >
             let xml_no_html = 1
 <
-Callback Functions {{{2                                 *xml-plugin-callbacks*
-------------------
+------------------------------------------------------------------------------
+							*xml-plugin-callbacks*
+Callback Functions {{{2 ~
 
 A callback function is a function used to customize features on a per tag
 basis. For example say you wish to have a default set of attributs when you
@@ -755,25 +755,25 @@ type an empty tag like this:
     You type: <tag>
     You get:  <tag default="attributes"></tag>
 
-This is for any script programmers who wish to add xml-plugin support to there
-own filetype plugins.
+This is for any script programmers who wish to add xml-plugin support to
+there own filetype plugins.
 
-Callback functions recive one attribute variable which is the tag name. The all
-must return either a string or the number zero. If it returns a string the
-plugin will place the string in the proper location. If it is a zero the plugin
-will ignore and continue as if no callback existed.
+Callback functions recive one attribute variable which is the tag name. The
+all must return either a string or the number zero. If it returns a string
+the plugin will place the string in the proper location. If it is a zero the
+plugin will ignore and continue as if no callback existed.
 
 The following are implemented callback functions:
 
 HtmlAttribCallback
-        This is used to add default attributes to html tag. It is intended for
-        HTML files only.
+	This is used to add default attributes to html tag. It is intended
+	for HTML files only.
 
 XmlAttribCallback
-        This is a generic callback for xml tags intended to add attributes.
+	This is a generic callback for xml tags intended to add attributes.
 
-Callback Example {{{2                                        *xml-plugin-html*
-----------------
+							     *xml-plugin-html*
+Callback Example {{{2 ~
 
 The following is an example of using XmlAttribCallback in your .vimrc
 >
@@ -787,9 +787,9 @@ The following is an example of using XmlAttribCallback in your .vimrc
 <
 The following is a sample html.vim file type plugin you could use:
 >
-  " Vim script file                                           vim600:fdm=marker:
+  " Vim script file                                       vim600:fdm=marker:
   " FileType:   HTML
-  " Maintainer: Devin Weaver <vim@tritarget.com>
+  " Maintainer: Devin Weaver <vim (at) tritarget.com>
   " Location:   http://www.vim.org/scripts/script.php?script_id=301
 
   " This is a wrapper script to add extra html support to xml documents.
