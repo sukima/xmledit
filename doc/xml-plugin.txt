@@ -1,0 +1,47 @@
+*xml-plugin.txt*  Plugin to help edit XML and SGML documents
+
+This script provides some convenience when editing XML (and some SGML)
+formated documents. It allows you to jump to the beginning or end of the tag
+block your cursor is in. '%' will jump between '<' and '>' within the tag your
+cursor is in. When in insert mode and you finish a tag (pressing '>') the
+tag will be completed. If you press '>' twice it will complete the tag and
+place the cursor in the middle of the tags on it's own line.
+
+Usage: Place this file into your ftplugin directory. To add html support
+Sym-link or copy this file to html.vim in your ftplugin directory. To activte
+the script place 'filetype plugin on' in your .vimrc file. See |ftplugins|
+for more information on this topic.
+
+Note: If you used the VIM 5.x version of this file (xmledit.vim) you'll need to
+comment out the section where you called it. It is no longer used in the
+VIM 6.x version. 
+
+Maintainer: Devin Weaver <devin@tritarget.com>
+Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
+Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
+
+Known Bugs:
+- < & > marks inside of a CDATA section are interpreted as actual XML tags
+  even if unmatched.
+- Although the script can handle leading spaces such as < tag></ tag> it is
+  illegal XML syntax and considered very bad form.
+- The matching algorithm can handle illegal tag characters where as the tag
+  completion algorithm can not.
+
+Mappings:
+<Leader>x
+	Visual - Place a custom XML tag to suround the selected text.
+
+<Leader>.   or   <Leader>>
+	Insert - Place a literal '>' without parsing tag.
+
+<Leader>5   or   <Leader>%
+	Normal - Jump to the begining or end tag.
+
+OPTIONS							*xml-plugin-settings*
+
+xml_use_xhtml
+	When editing HTML this will auto close the short tags to make
+	valid XML like <hr /> and <br />. Enter the following in your vimrc to
+	turn this option on:
+	    let xml_use_xhtml = 1
