@@ -32,13 +32,13 @@ Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
 
 Known Bugs:
-- This script will modify registers ". and "x; "" will be restored.
+- This script will modify registers ". and "x; register "" will be restored.
 - < & > marks inside of a CDATA section are interpreted as actual XML tags
   even if unmatched.
 - Although the script can handle leading spaces such as < tag></ tag> it is
   illegal XML syntax and considered very bad form.
 - Placing a literal `>' in an attribute value will auto complete dispite that
-  the start tag isn't finished. This is malformed XML anyway you should use
+  the start tag isn't finished. This is poor XML anyway you should use
   &gt; instead.
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
