@@ -1,7 +1,7 @@
 " Vim script file
 " FileType:	XML
 " Maintainer:	Devin Weaver <ktohg@tritarget.com>
-" Last Change:  Jan 16, 2002
+" Last Change:  $Date$
 " Version:      $Revision$
 " Location:	http://tritarget.com/pub/vim/scripts/xmledit.vim
 " Contributors: "Brad Phelan" <bphelan@mathworks.co.uk>,
