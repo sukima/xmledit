@@ -14,6 +14,14 @@ Sym-link or copy this file to html.vim in your ftplugin directory. To activte
 the script place 'filetype plugin on' in your |.vimrc| file. See |ftplugins|
 for more information on this topic.
 
+If the file edited is of type 'html' and 'xml_use_html' is  defined then the
+following tags will not auto complete:
+<img>, <input>, <param>, <frame>, <br>, <hr>, <meta>, <link>, <base>, <area>
+
+If the file edited is of type 'html' and 'xml_use_xhtml' is defined the above
+tags will autocomplete the xml closing staying xhtml compatable.
+ex. <hr> becomes <br /> (see |xml-plugin-settings|)
+
 Note: If you used the VIM 5.x version of this file (xmledit.vim) you'll need to
 comment out the section where you called it. It is no longer used in the
 VIM 6.x version. 
