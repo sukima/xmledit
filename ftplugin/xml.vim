@@ -20,6 +20,10 @@
 " PLEASE READ the associated documentation that came with this plugin for
 " usage, mappings, and settings.
 
+" TODO: Revamp ParseTag to pull appart a tag a rebuild it properly.
+" a tag like: <  test  nowrap  testatt=foo   >
+" should be fixed to: <test nowrap="nowrap" testatt="foo"></test>
+
 "==============================================================================
 
 " Only do this when not done yet for this buffer
@@ -57,6 +61,22 @@ function s:NewFileXML( )
 	if append (0, '<?xml version="1.0"?>')
 	    normal! G
 	endif
+    endif
+endfunction
+endif
+
+
+" Callback -> Checks for tag callbacks and executes them.            {{{1
+if !exists("*s:Callback")
+function s:Callback( xml_tag, isHtml )
+    let text = 0
+    if a:isHtml == 1 && exists ("*HtmlAttribCallback")
+	let text = HtmlAttribCallback (a:xml_tag)
+    elseif exists ("*XmlAttribCallback")
+	let text = XmlAttribCallback (a:xml_tag)
+    endif	
+    if text != '0'
+	execute "normal! i " . text ."\<Esc>l"
     endif
 endfunction
 endif
@@ -116,14 +136,22 @@ function s:ParseTag( )
 	endwhile
 
 	let tag_name = strpart (ltag, 1, index - 1)
+	if strpart (ltag, index) =~ '[^/>[:blank:]]'
+	    let has_attrib = 1
+	else
+	    let has_attrib = 0
+	endif
 
-	" That (index - 1) + 2    2 for the '</' and 1 for the extra character the
+	" That's (index - 1) + 2, 2 for the '</' and 1 for the extra character the
 	" while includes (the '>' is ignored because <Esc> puts the curser on top
 	" of the '>'
 	let index = index + 2
 
 	" print out the end tag and place the cursor back were it left off
 	if html_mode && tag_name =~? '^\(img\|input\|param\|frame\|br\|hr\|meta\|link\|base\|area\)$'
+	    if has_attrib == 0
+		call <SID>Callback (tag_name, html_mode)
+	    endif
 	    if exists ("g:xml_use_xhtml")
 		execute "normal! i /\<Esc>l"
 	    endif
@@ -138,6 +166,9 @@ function s:ParseTag( )
 		startinsert!
 		return ""
 	    else
+		if has_attrib == 0
+		    call <SID>Callback (tag_name, html_mode)
+		endif
 		execute "normal! a</" . tag_name . ">\<Esc>" . index . "h"
 	    endif
 	endif
@@ -152,6 +183,15 @@ function s:ParseTag( )
     else
 	startinsert!
     endif
+endfunction
+endif
+
+
+" ParseTag2 -> Experimental function to replace ParseTag             {{{1
+if !exists("*s:ParseTag2")
+function s:ParseTag2( )
+    " My thought is to pull the tag out and reformat it to a normalized tag
+    " and put it back.
 endfunction
 endif
 
