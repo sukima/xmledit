@@ -375,6 +375,22 @@ function s:MisMatchedTag( id, tag )
 endfunction
 endif
 
+" DeleteTag -> Deletes surrounding tags from cursor.                 {{{1
+" Modifies mark z
+if !exists("*s:DeleteTag")
+function s:DeleteTag( )
+    if strpart (getline ("."), col (".") - 1, 1) == "<"
+	normal! l
+    endif
+    if search ("<[^\/]", "bW") == 0
+	return
+    endif
+    normal! mz
+    normal \5
+    normal! d%`zd%
+endfunction
+endif
+ 
 " Mappings and Settings.                                             {{{1
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
@@ -387,6 +403,7 @@ inoremap <buffer> <Leader>> >
 " Jump between the beggining and end tags.
 nnoremap <buffer> <Leader>5 :call <SID>TagMatch1()<Cr>
 nnoremap <buffer> <Leader>% :call <SID>TagMatch1()<Cr>
+nnoremap <buffer> <Leader>d :call <SID>DeleteTag()<Cr>
 
 " Wrap selection in XML tag
 vnoremap <buffer> <Leader>x "xx"=<SID>WrapTag(@x)<Cr>P

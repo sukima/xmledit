@@ -55,6 +55,15 @@ Mappings ~
 <Leader>5   or   <Leader>%
 	Normal - Jump to the begining or end tag.
 
+<Leader>d
+	Normal - Deletes the surrounding tags from the cursor. >
+	    <tag1>outter <tag2>inner text</tag2> text</tag1>
+	            ^
+<       Turns to: >
+	    outter <tag2>inner text</tag2> text
+	    ^
+<
+
 OPTIONS							*xml-plugin-settings*
 
 (All options must be placed in your |.vimrc| prior to the |ftplugin| command.)
