@@ -469,17 +469,21 @@ function! s:SpellInstallDocumentation(full_name, revision)
     endif
 
     let l:doc_path = l:slash_char . 'doc'
-    let l:doc_home = l:slash_char . '.vim' . l:slash_char . 'doc'
+    "let l:doc_home = l:slash_char . '.vim' . l:slash_char . 'doc'
 
     " Figure out document path based on full name of this script:
     let l:vim_plugin_path = fnamemodify(a:full_name, ':h')
-    let l:vim_doc_path	  = fnamemodify(a:full_name, ':h:h') . l:doc_path
+    "let l:vim_doc_path	  = fnamemodify(a:full_name, ':h:h') . l:doc_path
+    let l:vim_doc_path    = matchstr(l:vim_plugin_path, 
+	    \ '.\{-}\ze\%(\%(ft\)\=plugin\|macros\)') . l:doc_path
     if (!(filewritable(l:vim_doc_path) == 2))
 	echomsg "Doc path: " . l:vim_doc_path
 	execute l:mkdir_cmd . l:vim_doc_path
 	if (!(filewritable(l:vim_doc_path) == 2))
 	    " Try a default configuration in user home:
-	    let l:vim_doc_path = expand("~") . l:doc_home
+	    "let l:vim_doc_path = expand("~") . l:doc_home
+	    let l:vim_doc_path = matchstr(&rtp,
+		  \ escape($HOME, '\') .'[/\\]\%(\.vim\|vimfiles\)')
 	    if (!(filewritable(l:vim_doc_path) == 2))
 		execute l:mkdir_cmd . l:vim_doc_path
 		if (!(filewritable(l:vim_doc_path) == 2))
