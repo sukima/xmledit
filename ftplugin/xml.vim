@@ -583,17 +583,17 @@ setlocal matchpairs+=<:>
 " Have this as an escape incase you want a literal '>' not to run the
 " ParseTag function.
 if !exists("g:xml_tag_completion_map")
-    inoremap <buffer> <Leader>. >
-    inoremap <buffer> <Leader>> >
+    inoremap <buffer> <LocalLeader>. >
+    inoremap <buffer> <LocalLeader>> >
 endif
 
 " Jump between the beggining and end tags.
-nnoremap <buffer> <Leader>5 :call <SID>TagMatch1()<Cr>
-nnoremap <buffer> <Leader>% :call <SID>TagMatch1()<Cr>
+nnoremap <buffer> <LocalLeader>5 :call <SID>TagMatch1()<Cr>
+nnoremap <buffer> <LocalLeader>% :call <SID>TagMatch1()<Cr>
 
 " Wrap selection in XML tag
-vnoremap <buffer> <Leader>x "xx:call <SID>WrapTag(@x)<Cr>
-nnoremap <buffer> <Leader>d :call <SID>DeleteTag()<Cr>
+vnoremap <buffer> <LocalLeader>x "xx:call <SID>WrapTag(@x)<Cr>
+nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
 
 " Parse the tag after pressing the close '>'.
 if !exists("g:xml_tag_completion_map")
@@ -665,21 +665,21 @@ Known Bugs {{{2
 Mappings {{{2						*xml-plugin-mappings*
 --------
 
-<Leader> is a setting in VIM that depicts a prefix for scripts and plugins to
+<LocalLeader> is a setting in VIM that depicts a prefix for scripts and plugins to
 use. By default this is the backslash key `\'. See |mapleader| for details.
 
-<Leader>x
+<LocalLeader>x
 	Visual - Place a custom XML tag to suround the selected text. You need
 	to have selected text in visual mode before you can use this mapping.
 	See |visual-mode| for details.
 
-<Leader>.   or	 <Leader>>
+<LocalLeader>.   or	 <LocalLeader>>
 	Insert - Place a literal '>' without parsing tag.
 
-<Leader>5   or	 <Leader>%
+<LocalLeader>5   or	 <LocalLeader>%
 	Normal - Jump to the begining or end tag.
 
-<Leader>d
+<LocalLeader>d
 	Normal - Deletes the surrounding tags from the cursor. >
 	    <tag1>outter <tag2>inner text</tag2> text</tag1>
 		    ^
