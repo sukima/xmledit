@@ -10,16 +10,12 @@
 " This script provides some convenience when editing XML (and some SGML)
 " formated documents.
 
-" Note: If you used the 5.x version of this file (xmledit.vim) you'll need to
-" comment out the section where you called it since it is no longer used in
-" version 6.x. 
-
 " Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 " Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
 " Kudos to "Guo-Peng Wen" for the self install documentation code.
 
 " Section: Documentation 
-"----------------------------
+" ----------------------
 "
 " Documentation should be available by ":help xml-plugin" command, once the
 " script has been copied in you .vim/plugin directory.
@@ -27,6 +23,10 @@
 " You still can read the documentation at the end of this file. Locate it by
 " searching the "xml-plugin" string (and set ft=help to have
 " appropriate syntaxic coloration). 
+
+" Note: If you used the 5.x version of this file (xmledit.vim) you'll need to
+" comment out the section where you called it since it is no longer used in
+" version 6.x. 
 
 " TODO: Revamp ParseTag to pull appart a tag a rebuild it properly.
 " a tag like: <  test  nowrap  testatt=foo   >
@@ -611,7 +611,7 @@ finish
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 === START_DOC
 						*xml-plugin.txt* *xmledit.vim*
-XML Edit							     #version#
+XML Edit {{{2							     #version#
 
 A filetype plugin to help edit XML and SGML documents.
 
@@ -645,7 +645,8 @@ Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
 Kudos to "Guo-Peng Wen" for the self install documentation code.
 
-Known Bugs ~ {{{2
+Known Bugs {{{2
+----------
 
 - This script will modify registers ". and "x; register "" will be restored.
 - < & > marks inside of a CDATA section are interpreted as actual XML tags
@@ -658,7 +659,8 @@ Known Bugs ~ {{{2
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
-Mappings ~ {{{2						*xml-plugin-mappings*
+Mappings {{{2						*xml-plugin-mappings*
+--------
 
 <Leader> is a setting in VIM that depicts a prefix for scripts and plugins to
 use. By default this is the backslash key `\'. See |mapleader| for details.
@@ -683,7 +685,8 @@ use. By default this is the backslash key `\'. See |mapleader| for details.
 	    ^
 <
 
-OPTIONS	{{{2						*xml-plugin-settings*
+Options {{{2						*xml-plugin-settings*
+-------
 
 (All options must be placed in your |.vimrc| prior to the |ftplugin| command.)
 
@@ -715,7 +718,8 @@ xml_no_html
 	.vimrc: >
 	    let xml_no_html = 1
 <
-CALLBACK FUNCTIONS {{{2					*xml-plugin-callbacks*
+Callback Functions {{{2					*xml-plugin-callbacks*
+------------------
 
 A callback function is a function used to customize features on a per tag
 basis. For example say you wish to have a default set of attributs when you
@@ -740,7 +744,8 @@ HtmlAttribCallback
 XmlAttribCallback
 	This is a generic callback for xml tags intended to add attributes.
 
-CALLBACK EXAMPLE {{{2
+Callback Example {{{2					     *xml-plugin-html*
+----------------
 
 The following is an example of using XmlAttribCallback in your .vimrc
 >
@@ -754,28 +759,44 @@ The following is an example of using XmlAttribCallback in your .vimrc
 <
 The following is a sample html.vim file type plugin you could use:
 >
-	" Only do this when not done yet for this buffer
-	if exists("b:did_ftplugin")
-	  finish
-	endif
-	" Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
+  " Vim script file                                           vim600:fdm=marker:
+  " FileType:	HTML
+  " Maintainer:	Devin Weaver <vim@tritarget.com>
+  " Location:	http://www.vim.org/scripts/script.php?script_id=301
 
-	if !exists("HtmlAttribCallback")
-	function HtmlAttribCallback( xml_tag )
-	    if a:xml_tag ==? "table"
-		return "cellpadding=\"0\" cellspacing=\"0\" border=\"0\""
-	    elseif a:xml_tag ==? "link"
-		return "href=\"/site.css\" rel=\"StyleSheet\" type=\"text/css\""
-	    elseif a:xml_tag ==? "body"
-		return "bgcolor=\"white\""
-	    else
-		return 0
-	    endif
-	endfunction
-	endif
+  " This is a wrapper script to add extra html support to xml documents.
+  " Original script can be seen in xml-plugin documentation.
 
-	" On to loading xml.vim
-	runtime ftplugin/xml.vim
+  " Only do this when not done yet for this buffer
+  if exists("b:did_ftplugin")
+    finish
+  endif
+  " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
+
+  let b:html_mode = 1
+
+  if !exists("*HtmlAttribCallback")
+  function HtmlAttribCallback( xml_tag )
+      if a:xml_tag ==? "table"
+	  return "cellpadding=\"0\" cellspacing=\"0\" border=\"0\""
+      elseif a:xml_tag ==? "link"
+	  return "href=\"/site.css\" rel=\"StyleSheet\" type=\"text/css\""
+      elseif a:xml_tag ==? "body"
+	  return "bgcolor=\"white\""
+      elseif a:xml_tag ==? "frame"
+	  return "name=\"NAME\" src=\"/\" scrolling=\"auto\" noresize"
+      elseif a:xml_tag ==? "frameset"
+	  return "rows=\"0,*\" cols=\"*,0\" border=\"0\""
+      elseif a:xml_tag ==? "img"
+	  return "src=\"\" width=\"0\" height=\"0\" border=\"0\" alt=\"\""
+      else
+	  return 0
+      endif
+  endfunction
+  endif
+
+  " On to loading xml.vim
+  runtime ftplugin/xml.vim
 <
 === END_DOC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
