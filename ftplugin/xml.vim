@@ -443,7 +443,8 @@ function s:DeleteTag( )
 endfunction
 endif
  
-" Function: s:SpellInstallDocumentation(full_name, revision)		  {{{1
+" Section: Doc installation {{{1
+" Function: s:SpellInstallDocumentation(full_name, revision)		  {{{2
 "   Install help documentation.
 " Arguments:
 "   full_name: Full name of this vim plugin script, including path name.
@@ -559,18 +560,16 @@ function! s:SpellInstallDocumentation(full_name, revision)
 
     return 1
 endfunction
-"
+" }}}2
 
-" Section: Doc installation {{{1
-"
-  let s:revision=
-	\ substitute("$Revision$",'\$\S*: \([.0-9]\+\) \$','\1','')
-  silent! let s:install_status =
-      \ s:SpellInstallDocumentation(expand('<sfile>:p'), s:revision)
-  if (s:install_status == 1)
-      echom expand("<sfile>:t:r") . '-plugin v' . s:revision .
-		\ ': Help-documentation installed.'
-  endif
+let s:revision=
+      \ substitute("$Revision$",'\$\S*: \([.0-9]\+\) \$','\1','')
+silent! let s:install_status =
+    \ s:SpellInstallDocumentation(expand('<sfile>:p'), s:revision)
+if (s:install_status == 1)
+    echom expand("<sfile>:t:r") . '-plugin v' . s:revision .
+      	\ ': Help-documentation installed.'
+endif
 
 
 " Mappings and Settings.					     {{{1
