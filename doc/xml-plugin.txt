@@ -1,4 +1,6 @@
-*xml-plugin.txt*  Plugin to help edit XML and SGML documents
+XML Edit                              *xml-plugin.txt* *xml.vim* *xmledit.vim*
+
+A filetype plugin to help edit XML and SGML documents.
 
 This script provides some convenience when editing XML (and some SGML)
 formated documents. It allows you to jump to the beginning or end of the tag
@@ -9,7 +11,7 @@ place the cursor in the middle of the tags on it's own line.
 
 Usage: Place this file into your ftplugin directory. To add html support
 Sym-link or copy this file to html.vim in your ftplugin directory. To activte
-the script place 'filetype plugin on' in your .vimrc file. See |ftplugins|
+the script place 'filetype plugin on' in your |.vimrc| file. See |ftplugins|
 for more information on this topic.
 
 Note: If you used the VIM 5.x version of this file (xmledit.vim) you'll need to
