@@ -447,6 +447,24 @@ function s:DeleteTag( )
     normal! d%`zd%
 endfunction
 endif
+
+" VisualTag -> Selects Tag body in a visual selection.                {{{1
+" Modifies mark z
+if !exists("*s:VisualTag")
+function s:VisualTag( ) 
+    if strpart (getline ("."), col (".") - 1, 1) == "<"
+	normal! l
+    endif
+    if search ("<[^\/]", "bW") == 0
+	return
+    endif
+    normal! mz
+    normal \5
+    normal! %
+    exe "normal! " . visualmode()
+    normal! `z
+endfunction
+endif
  
 " Section: Doc installation {{{1
 " Function: s:SpellInstallDocumentation(full_name, revision)              {{{2
@@ -595,6 +613,8 @@ endif
 " Jump between the beggining and end tags.
 nnoremap <buffer> <LocalLeader>5 :call <SID>TagMatch1()<Cr>
 nnoremap <buffer> <LocalLeader>% :call <SID>TagMatch1()<Cr>
+vnoremap <buffer> <LocalLeader>5 <Esc>:call <SID>VisualTag()<Cr>
+vnoremap <buffer> <LocalLeader>% <Esc>:call <SID>VisualTag()<Cr>
 
 " Wrap selection in XML tag
 vnoremap <buffer> <LocalLeader>x "xx:call <SID>WrapTag(@x)<Cr>
@@ -682,7 +702,7 @@ use. By default this is the backslash key `\'. See |mapleader| for details.
         Insert - Place a literal '>' without parsing tag.
 
 <LocalLeader>5   or      <LocalLeader>%
-        Normal - Jump to the begining or end tag.
+        Normal or Visual - Jump to the begining or end tag.
 
 <LocalLeader>d
         Normal - Deletes the surrounding tags from the cursor. >
