@@ -1,9 +1,9 @@
 " Vim script file
 " FileType:	XML
-" Maintainer:	Devin Weaver <ktohg@tritarget.com>
+" Maintainer:	Devin Weaver <devin@tritarget.com>
 " Last Change:  $Date$
 " Version:      $Revision$
-" Location:	http://tritarget.com/pub/vim/scripts/xmledit.vim
+" Location:	http://tritarget.com/pub/vim/ftplugin/xml.vim
 " Contributors: "Brad Phelan" <bphelan@mathworks.co.uk>,
 "               "Ma, Xiangjiang" <Xiangjiang.Ma@broadvision.com>
 
@@ -56,10 +56,16 @@ let b:did_ftplugin = 1
 
 
 " Brad Phelan: Wrap the argument in an XML tag
+" Added nice GUI support to the dialogs. 
 if !exists("*s:WrapTag") 
 function s:WrapTag(text)
-    let wraptag = input('tag : ')                                             
-    let atts = input('attributes : ')                                         
+    if strlen(a:text) > 10
+	let input_text = strpart(a:text, 0, 10) . '...'
+    else
+	let input_text = a:text
+    endif
+    let wraptag = inputdialog('Tag to wrap "' . input_text . '" : ')
+    let atts = inputdialog('Attributes in <' . wraptag . '> : ')
     if strlen(atts)==0                                                        
 	let text = '<'.wraptag.'>'.a:text.'</'.wraptag.'>'                     
     else                                                                      
@@ -340,17 +346,14 @@ endif
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
 
-if has ("gui_running")
-    " Have this as an escape incase you want a literal '>' not to run the
-    " ParseTag function.
-    inoremap <buffer> <M-.> >
+" Have this as an escape incase you want a literal '>' not to run the
+" ParseTag function.
+inoremap <buffer> <Leader>. >
+inoremap <buffer> <Leader>> >
 
-    " Jump between the beggining and end tags.
-    nnoremap <buffer> <M-5> :call <SID>TagMatch1()<Cr>
-else
-    inoremap <buffer> <Esc>. >
-    nnoremap <buffer> <Esc>5 :call <SID>TagMatch1()<Cr>
-endif
+" Jump between the beggining and end tags.
+nnoremap <buffer> <Leader>5 :call <SID>TagMatch1()<Cr>
+nnoremap <buffer> <Leader>% :call <SID>TagMatch1()<Cr>
 
 " Wrap selection in XML tag
 vnoremap <buffer> <Leader>x "xx"=<SID>WrapTag(@x)<Cr>P
