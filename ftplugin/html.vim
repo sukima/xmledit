@@ -13,6 +13,8 @@ if exists("b:did_ftplugin")
 endif
 " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
 
+let b:html_mode = 1
+
 if !exists("*HtmlAttribCallback")
 function HtmlAttribCallback( xml_tag )
     if a:xml_tag ==? "table"
@@ -25,6 +27,8 @@ function HtmlAttribCallback( xml_tag )
 	return "name=\"NAME\" src=\"/\" scrolling=\"auto\" noresize"
     elseif a:xml_tag ==? "frameset"
 	return "rows=\"0,*\" cols=\"*,0\" border=\"0\""
+    elseif a:xml_tag ==? "img"
+	return "src=\"\" width=\"0\" height=\"0\" border=\"0\" alt=\"\""
     else
 	return 0
     endif
