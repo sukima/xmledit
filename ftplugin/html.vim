@@ -13,7 +13,7 @@ if exists("b:did_ftplugin")
 endif
 " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
 
-if !exists("HtmlAttribCallback")
+if !exists("*HtmlAttribCallback")
 function HtmlAttribCallback( xml_tag )
     if a:xml_tag ==? "table"
 	return "cellpadding=\"0\" cellspacing=\"0\" border=\"0\""
