@@ -817,6 +817,20 @@ The following is a sample html.vim file type plugin you could use:
           return "rows=\"0,*\" cols=\"*,0\" border=\"0\""
       elseif a:xml_tag ==? "img"
           return "src=\"\" width=\"0\" height=\"0\" border=\"0\" alt=\"\""
+      elseif a:xml_tag ==? "a"
+          if has("browse")
+	      " Look up a file to fill the href. Used in local relative file
+	      " links. typeing your own href before closing the tag with `>'
+	      " will override this.
+              let cwd = getcwd()
+              let cwd = substitute (cwd, "\\", "/", "g")
+              let href = browse (0, "Link to href...", getcwd(), "")
+              let href = substitute (href, cwd . "/", "", "")
+              let href = substitute (href, " ", "%20", "g")
+          else
+              let href = ""
+          endif
+          return "href=\"" . href . "\""
       else
           return 0
       endif
