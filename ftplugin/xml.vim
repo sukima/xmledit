@@ -1,11 +1,11 @@
-" Vim script file                                           vim600:fdm=marker:
+" Vim script file					    vim600:fdm=marker:
 " FileType:	XML
 " Maintainer:	Devin Weaver <vim@tritarget.com>
-" Last Change:  $Date$
-" Version:      $Revision$
+" Last Change:	$Date$
+" Version:	$Revision$
 " Location:	http://tritarget.com/pub/vim/ftplugin/xml.vim
 " Contributors: "Brad Phelan" <bphelan@mathworks.co.uk>,
-"               "Ma, Xiangjiang" <Xiangjiang.Ma@broadvision.com>
+"		"Ma, Xiangjiang" <Xiangjiang.Ma@broadvision.com>
 
 " This script provides some convenience when editing XML (and some SGML)
 " formated documents.
@@ -17,8 +17,15 @@
 " Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 " Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
 
-" PLEASE READ the associated documentation that came with this plugin for
-" usage, mappings, and settings.
+" Section: Documentation 
+"----------------------------
+"
+" Documentation should be available by ":help xml-plugin" command, once the
+" script has been copied in you .vim/plugin directory.
+"
+" You still can read the documentation at the end of this file. Locate it by
+" searching the "xml-plugin" string (and set ft=help to have
+" appropriate syntaxic coloration). 
 
 " TODO: Revamp ParseTag to pull appart a tag a rebuild it properly.
 " a tag like: <  test  nowrap  testatt=foo   >
@@ -32,7 +39,7 @@ if exists("b:did_ftplugin")
 endif
 let b:did_ftplugin = 1
 
-" WrapTag -> Places an XML tag around a visual selection.            {{{1
+" WrapTag -> Places an XML tag around a visual selection.	     {{{1
 " Brad Phelan: Wrap the argument in an XML tag
 " Added nice GUI support to the dialogs. 
 " Rewrote function to implement new algorythem that addresses several bugs.
@@ -85,7 +92,7 @@ function s:WrapTag(text)
 endfunction
 endif
 
-" NewFileXML -> Inserts <?xml?> at top of new file.                  {{{1
+" NewFileXML -> Inserts <?xml?> at top of new file.		     {{{1
 if !exists("*s:NewFileXML")
 function s:NewFileXML( )
     " Where is g:did_xhtmlcf_inits defined?
@@ -98,7 +105,7 @@ endfunction
 endif
 
 
-" Callback -> Checks for tag callbacks and executes them.            {{{1
+" Callback -> Checks for tag callbacks and executes them.	     {{{1
 if !exists("*s:Callback")
 function s:Callback( xml_tag, isHtml )
     let text = 0
@@ -114,7 +121,7 @@ endfunction
 endif
 
 
-" IsParsableTag -> Check to see if the tag is a real tag.            {{{1
+" IsParsableTag -> Check to see if the tag is a real tag.	     {{{1
 if !exists("*s:IsParsableTag")
 function s:IsParsableTag( tag )
     " The "Should I parse?" flag.
@@ -135,7 +142,7 @@ endfunction
 endif
 
 
-" ParseTag -> The major work hourse for tag completion.              {{{1
+" ParseTag -> The major work hourse for tag completion.		     {{{1
 if !exists("*s:ParseTag")
 function s:ParseTag( )
     " Save registers
@@ -226,7 +233,7 @@ endfunction
 endif
 
 
-" ParseTag2 -> Experimental function to replace ParseTag             {{{1
+" ParseTag2 -> Experimental function to replace ParseTag	     {{{1
 "if !exists("*s:ParseTag2")
 "function s:ParseTag2( )
     " My thought is to pull the tag out and reformat it to a normalized tag
@@ -235,7 +242,7 @@ endif
 "endif
 
 
-" BuildTagName -> Grabs the tag's name for tag matching.             {{{1
+" BuildTagName -> Grabs the tag's name for tag matching.	     {{{1
 if !exists("*s:BuildTagName")
 function s:BuildTagName( )
   "First check to see if we Are allready on the end of the tag. The / search
@@ -274,7 +281,7 @@ function s:BuildTagName( )
 endfunction
 endif
 
-" TagMatch1 -> First step in tag matching.                           {{{1 
+" TagMatch1 -> First step in tag matching.			     {{{1 
 " Brad Phelan: First step in tag matching.
 if !exists("*s:TagMatch1")
 function s:TagMatch1()
@@ -315,7 +322,7 @@ endfunction
 endif
 
 
-" TagMatch2 -> Second step in tag matching.                          {{{1
+" TagMatch2 -> Second step in tag matching.			     {{{1
 " Brad Phelan: Second step in tag matching.
 if !exists("*s:TagMatch2")
 function s:TagMatch2(tag,endtag)
@@ -404,7 +411,7 @@ function s:TagMatch2(tag,endtag)
 endfunction
 endif
 
-" MisMatchedTag -> What to do if a tag is mismatched.                {{{1
+" MisMatchedTag -> What to do if a tag is mismatched.		     {{{1
 if !exists("*s:MisMatchedTag")
 function s:MisMatchedTag( id, tag )
     "Jump back to our formor spot
@@ -419,7 +426,7 @@ function s:MisMatchedTag( id, tag )
 endfunction
 endif
 
-" DeleteTag -> Deletes surrounding tags from cursor.                 {{{1
+" DeleteTag -> Deletes surrounding tags from cursor.		     {{{1
 " Modifies mark z
 if !exists("*s:DeleteTag")
 function s:DeleteTag( )
@@ -435,12 +442,12 @@ function s:DeleteTag( )
 endfunction
 endif
  
-" Function: s:SpellInstallDocumentation(full_name, revision)              {{{1
+" Function: s:SpellInstallDocumentation(full_name, revision)		  {{{1
 "   Install help documentation.
 " Arguments:
 "   full_name: Full name of this vim plugin script, including path name.
 "   revision:  Revision of the vim script. #version# mark in the document file
-"              will be replaced with this string with 'v' prefix.
+"	       will be replaced with this string with 'v' prefix.
 " Return:
 "   1 if new document installed, 0 otherwise.
 " Note: Cleaned and generalized by guo-peng Wen
@@ -449,14 +456,14 @@ endif
 function! s:SpellInstallDocumentation(full_name, revision)
     " Name of the document path based on the system we use:
     if (has("unix"))
-        " On UNIX like system, using forward slash:
-        let l:slash_char = '/'
-        let l:mkdir_cmd  = ':silent !mkdir -p '
+	" On UNIX like system, using forward slash:
+	let l:slash_char = '/'
+	let l:mkdir_cmd  = ':silent !mkdir -p '
     else
-        " On M$ system, use backslash. Also mkdir syntax is different.
-        " This should only work on W2K and up.
-        let l:slash_char = '\'
-        let l:mkdir_cmd  = ':silent !mkdir '
+	" On M$ system, use backslash. Also mkdir syntax is different.
+	" This should only work on W2K and up.
+	let l:slash_char = '\'
+	let l:mkdir_cmd  = ':silent !mkdir '
     endif
 
     let l:doc_path = l:slash_char . 'doc'
@@ -464,49 +471,49 @@ function! s:SpellInstallDocumentation(full_name, revision)
 
     " Figure out document path based on full name of this script:
     let l:vim_plugin_path = fnamemodify(a:full_name, ':h')
-    let l:vim_doc_path    = fnamemodify(a:full_name, ':h:h') . l:doc_path
+    let l:vim_doc_path	  = fnamemodify(a:full_name, ':h:h') . l:doc_path
     if (!(filewritable(l:vim_doc_path) == 2))
-        echomsg "Doc path: " . l:vim_doc_path
-        execute l:mkdir_cmd . l:vim_doc_path
-        if (!(filewritable(l:vim_doc_path) == 2))
-            " Try a default configuration in user home:
-            let l:vim_doc_path = expand("~") . l:doc_home
-            if (!(filewritable(l:vim_doc_path) == 2))
-                execute l:mkdir_cmd . l:vim_doc_path
-                if (!(filewritable(l:vim_doc_path) == 2))
-                    " Put a warning:
-                    echomsg "Unable to open documentation directory"
-                    echomsg " type :help add-local-help for more informations."
-                    return 0
-                endif
-            endif
-        endif
+	echomsg "Doc path: " . l:vim_doc_path
+	execute l:mkdir_cmd . l:vim_doc_path
+	if (!(filewritable(l:vim_doc_path) == 2))
+	    " Try a default configuration in user home:
+	    let l:vim_doc_path = expand("~") . l:doc_home
+	    if (!(filewritable(l:vim_doc_path) == 2))
+		execute l:mkdir_cmd . l:vim_doc_path
+		if (!(filewritable(l:vim_doc_path) == 2))
+		    " Put a warning:
+		    echomsg "Unable to open documentation directory"
+		    echomsg " type :help add-local-help for more informations."
+		    return 0
+		endif
+	    endif
+	endif
     endif
 
     " Exit if we have problem to access the document directory:
     if (!isdirectory(l:vim_plugin_path)
-        \ || !isdirectory(l:vim_doc_path)
-        \ || filewritable(l:vim_doc_path) != 2)
-        return 0
+	\ || !isdirectory(l:vim_doc_path)
+	\ || filewritable(l:vim_doc_path) != 2)
+	return 0
     endif
 
     " Full name of script and documentation file:
     let l:script_name = fnamemodify(a:full_name, ':t')
-    let l:doc_name    = fnamemodify(a:full_name, ':t:r') . '.txt'
+    let l:doc_name    = fnamemodify(a:full_name, ':t:r') . '-plugin.txt'
     let l:plugin_file = l:vim_plugin_path . l:slash_char . l:script_name
-    let l:doc_file    = l:vim_doc_path    . l:slash_char . l:doc_name
+    let l:doc_file    = l:vim_doc_path	  . l:slash_char . l:doc_name
 
     " Bail out if document file is still up to date:
     if (filereadable(l:doc_file)  &&
-        \ getftime(l:plugin_file) < getftime(l:doc_file))
-        return 0
+	\ getftime(l:plugin_file) < getftime(l:doc_file))
+	return 0
     endif
 
     " Prepare window position restoring command:
     if (strlen(@%))
-        let l:go_back = 'b ' . bufnr("%")
+	let l:go_back = 'b ' . bufnr("%")
     else
-        let l:go_back = 'enew!'
+	let l:go_back = 'enew!'
     endif
 
     " Create a new buffer & read in the plugin file (me):
@@ -539,7 +546,7 @@ function! s:SpellInstallDocumentation(full_name, revision)
     call append(line('$'), ' v' . 'im:tw=78:ts=8:ft=help:norl:')
 
     " Replace revision:
-    exe "normal :1s/#version#/ v" . a:revision . "/\<CR>"
+    exe "normal :1,5s/#version#/ v" . a:revision . "/\<CR>"
 
     " Save the help document:
     exe 'w! ' . l:doc_file
@@ -565,7 +572,7 @@ endfunction
   endif
 
 
-" Mappings and Settings.                                             {{{1
+" Mappings and Settings.					     {{{1
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
 
@@ -599,11 +606,11 @@ augroup END
 finish
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Section: Documentation content                                          {{{1
+" Section: Documentation content					  {{{1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 === START_DOC
-                                                *xml-plugin.txt* *xmledit.vim*
-XML Edit                                                             #version#
+						*xml-plugin.txt* *xmledit.vim*
+XML Edit							     #version#
 
 A filetype plugin to help edit XML and SGML documents.
 
@@ -649,64 +656,64 @@ Known Bugs ~
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
-Mappings ~                                              *xml-plugin-mappings*
+Mappings ~						*xml-plugin-mappings*
 
 <Leader> is a setting in VIM that depicts a prefix for scripts and plugins to
 use. By default this is the backslash key `\'. See |mapleader| for details.
 
 <Leader>x
-        Visual - Place a custom XML tag to suround the selected text. You need
-        to have selected text in visual mode before you can use this mapping.
-        See |visual-mode| for details.
+	Visual - Place a custom XML tag to suround the selected text. You need
+	to have selected text in visual mode before you can use this mapping.
+	See |visual-mode| for details.
 
-<Leader>.   or   <Leader>>
-        Insert - Place a literal '>' without parsing tag.
+<Leader>.   or	 <Leader>>
+	Insert - Place a literal '>' without parsing tag.
 
-<Leader>5   or   <Leader>%
-        Normal - Jump to the begining or end tag.
+<Leader>5   or	 <Leader>%
+	Normal - Jump to the begining or end tag.
 
 <Leader>d
-        Normal - Deletes the surrounding tags from the cursor. >
-            <tag1>outter <tag2>inner text</tag2> text</tag1>
-                    ^
-<       Turns to: >
-            outter <tag2>inner text</tag2> text
-            ^
+	Normal - Deletes the surrounding tags from the cursor. >
+	    <tag1>outter <tag2>inner text</tag2> text</tag1>
+		    ^
+<	Turns to: >
+	    outter <tag2>inner text</tag2> text
+	    ^
 <
 
-OPTIONS                                                 *xml-plugin-settings*
+OPTIONS							*xml-plugin-settings*
 
 (All options must be placed in your |.vimrc| prior to the |ftplugin| command.)
 
 xml_tag_completion_map
-        Use this setting to change the default mapping to auto complete a tag.
-        By default typing a literal `>' will cause the tag your editing to auto
-        complete; pressing twice will auto nest the tag. By using this setting
-        the `>' will be a literal `>' and you must use the new mapping to
-        perform auto completion and auto nesting. For example if you wanted
-        Control-L to perform auto completion inmstead of typing a `>' place the
-        following into your .vimrc: >
-            let xml_tag_completion_map = "<C-l>"
+	Use this setting to change the default mapping to auto complete a tag.
+	By default typing a literal `>' will cause the tag your editing to auto
+	complete; pressing twice will auto nest the tag. By using this setting
+	the `>' will be a literal `>' and you must use the new mapping to
+	perform auto completion and auto nesting. For example if you wanted
+	Control-L to perform auto completion inmstead of typing a `>' place the
+	following into your .vimrc: >
+	    let xml_tag_completion_map = "<C-l>"
 <
 xml_no_auto_nesting
-        This turns off the auto nesting feature. After a completion is made and
-        another `>' is typed xml-edit automatically will break the tag accross
-        multiple lines and indent the curser to make creating nested tqags
-        easier. This feature turns it off. Enter the following in your .vimrc: >
-            let xml_no_auto_nesting = 1
+	This turns off the auto nesting feature. After a completion is made and
+	another `>' is typed xml-edit automatically will break the tag accross
+	multiple lines and indent the curser to make creating nested tqags
+	easier. This feature turns it off. Enter the following in your .vimrc: >
+	    let xml_no_auto_nesting = 1
 <
 xml_use_xhtml
-        When editing HTML this will auto close the short tags to make
-        valid XML like <hr /> and <br />. Enter the following in your vimrc to
-        turn this option on: >
-            let xml_use_xhtml = 1
+	When editing HTML this will auto close the short tags to make
+	valid XML like <hr /> and <br />. Enter the following in your vimrc to
+	turn this option on: >
+	    let xml_use_xhtml = 1
 <
 xml_no_html
-        This turns of the support for HTML specific tags. Place this in your
-        .vimrc: >
-            let xml_no_html = 1
+	This turns of the support for HTML specific tags. Place this in your
+	.vimrc: >
+	    let xml_no_html = 1
 <
-CALLBACK FUNCTIONS                                      *xml-plugin-callbacks*
+CALLBACK FUNCTIONS					*xml-plugin-callbacks*
 
 A callback function is a function used to customize features on a per tag
 basis. For example say you wish to have a default set of attributs when you
@@ -725,49 +732,53 @@ will ignore and continue as if no callback existed.
 The following are implemented callback functions:
 
 HtmlAttribCallback
-        This is used to add default attributes to html tag. It is intended for
-        HTML files only.
+	This is used to add default attributes to html tag. It is intended for
+	HTML files only.
 
 XmlAttribCallback
-        This is a generic callback for xml tags intended to add attributes.
+	This is a generic callback for xml tags intended to add attributes.
 
 CALLBACK EXAMPLE
 
 The following is an example of using XmlAttribCallback in your .vimrc
 >
-        function XmlAttribCallback (xml_tag)
-            if a:xml_tag ==? "my-xml-tag"
-                return "attributes=\"my xml attributes\""
-            else
-                return 0
-            endif
-        endfunction
+	function XmlAttribCallback (xml_tag)
+	    if a:xml_tag ==? "my-xml-tag"
+		return "attributes=\"my xml attributes\""
+	    else
+		return 0
+	    endif
+	endfunction
 <
 The following is a sample html.vim file type plugin you could use:
 >
-        " Only do this when not done yet for this buffer
-        if exists("b:did_ftplugin")
-          finish
-        endif
-        " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
+	" Only do this when not done yet for this buffer
+	if exists("b:did_ftplugin")
+	  finish
+	endif
+	" Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
 
-        if !exists("HtmlAttribCallback")
-        function HtmlAttribCallback( xml_tag )
-            if a:xml_tag ==? "table"
-                return "cellpadding=\"0\" cellspacing=\"0\" border=\"0\""
-            elseif a:xml_tag ==? "link"
-                return "href=\"/site.css\" rel=\"StyleSheet\" type=\"text/css\""
-            elseif a:xml_tag ==? "body"
-                return "bgcolor=\"white\""
-            else
-                return 0
-            endif
-        endfunction
-        endif
+	if !exists("HtmlAttribCallback")
+	function HtmlAttribCallback( xml_tag )
+	    if a:xml_tag ==? "table"
+		return "cellpadding=\"0\" cellspacing=\"0\" border=\"0\""
+	    elseif a:xml_tag ==? "link"
+		return "href=\"/site.css\" rel=\"StyleSheet\" type=\"text/css\""
+	    elseif a:xml_tag ==? "body"
+		return "bgcolor=\"white\""
+	    else
+		return 0
+	    endif
+	endfunction
+	endif
 
-        " On to loading xml.vim
-        runtime ftplugin/xml.vim
+	" On to loading xml.vim
+	runtime ftplugin/xml.vim
 <
 
 ==============================================================================
 === END_DOC
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" v im:tw=78:ts=8:ft=help:norl:
+" vim600: set foldmethod=marker  tabstop=8 shiftwidth=2 softtabstop=2 smartindent smarttab  :
+"fileencoding=iso-8859-15 
