@@ -435,6 +435,136 @@ function s:DeleteTag( )
 endfunction
 endif
  
+" Function: s:SpellInstallDocumentation(full_name, revision)              {{{1
+"   Install help documentation.
+" Arguments:
+"   full_name: Full name of this vim plugin script, including path name.
+"   revision:  Revision of the vim script. #version# mark in the document file
+"              will be replaced with this string with 'v' prefix.
+" Return:
+"   1 if new document installed, 0 otherwise.
+" Note: Cleaned and generalized by guo-peng Wen
+"'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+function! s:SpellInstallDocumentation(full_name, revision)
+    " Name of the document path based on the system we use:
+    if (has("unix"))
+        " On UNIX like system, using forward slash:
+        let l:slash_char = '/'
+        let l:mkdir_cmd  = ':silent !mkdir -p '
+    else
+        " On M$ system, use backslash. Also mkdir syntax is different.
+        " This should only work on W2K and up.
+        let l:slash_char = '\'
+        let l:mkdir_cmd  = ':silent !mkdir '
+    endif
+
+    let l:doc_path = l:slash_char . 'doc'
+    let l:doc_home = l:slash_char . '.vim' . l:slash_char . 'doc'
+
+    " Figure out document path based on full name of this script:
+    let l:vim_plugin_path = fnamemodify(a:full_name, ':h')
+    let l:vim_doc_path    = fnamemodify(a:full_name, ':h:h') . l:doc_path
+    if (!(filewritable(l:vim_doc_path) == 2))
+        echomsg "Doc path: " . l:vim_doc_path
+        execute l:mkdir_cmd . l:vim_doc_path
+        if (!(filewritable(l:vim_doc_path) == 2))
+            " Try a default configuration in user home:
+            let l:vim_doc_path = expand("~") . l:doc_home
+            if (!(filewritable(l:vim_doc_path) == 2))
+                execute l:mkdir_cmd . l:vim_doc_path
+                if (!(filewritable(l:vim_doc_path) == 2))
+                    " Put a warning:
+                    echomsg "Unable to open documentation directory"
+                    echomsg " type :help add-local-help for more informations."
+                    return 0
+                endif
+            endif
+        endif
+    endif
+
+    " Exit if we have problem to access the document directory:
+    if (!isdirectory(l:vim_plugin_path)
+        \ || !isdirectory(l:vim_doc_path)
+        \ || filewritable(l:vim_doc_path) != 2)
+        return 0
+    endif
+
+    " Full name of script and documentation file:
+    let l:script_name = fnamemodify(a:full_name, ':t')
+    let l:doc_name    = fnamemodify(a:full_name, ':t:r') . '.txt'
+    let l:plugin_file = l:vim_plugin_path . l:slash_char . l:script_name
+    let l:doc_file    = l:vim_doc_path    . l:slash_char . l:doc_name
+
+    " Bail out if document file is still up to date:
+    if (filereadable(l:doc_file)  &&
+        \ getftime(l:plugin_file) < getftime(l:doc_file))
+        return 0
+    endif
+
+    " Prepare window position restoring command:
+    if (strlen(@%))
+        let l:go_back = 'b ' . bufnr("%")
+    else
+        let l:go_back = 'enew!'
+    endif
+
+    " Create a new buffer & read in the plugin file (me):
+    setl nomodeline
+    exe 'enew!'
+    exe 'r ' . l:plugin_file
+
+    setl modeline
+    let l:buf = bufnr("%")
+    setl noswapfile modifiable
+
+    norm zR
+    norm gg
+
+    " Delete from first line to a line starts with
+    " === START_DOC
+    1,/^=\{3,}\s\+START_DOC\C/ d
+
+    " Delete from a line starts with
+    " === END_DOC
+    " to the end of the documents:
+    /^=\{3,}\s\+END_DOC\C/,$ d
+
+    " Remove fold marks:
+    % s/{\{3}[1-9]/    /
+
+    " Add modeline for help doc: the modeline string is mangled intentionally
+    " to avoid it be recognized by VIM:
+    call append(line('$'), '')
+    call append(line('$'), ' v' . 'im:tw=78:ts=8:ft=help:norl:')
+
+    " Replace revision:
+    exe "normal :1s/#version#/ v" . a:revision . "/\<CR>"
+
+    " Save the help document:
+    exe 'w! ' . l:doc_file
+    exe l:go_back
+    exe 'bw ' . l:buf
+
+    " Build help tags:
+    exe 'helptags ' . l:vim_doc_path
+
+    return 1
+endfunction
+"
+
+" Section: Doc installation {{{1
+"
+  let s:revision=
+	\ substitute("$Revision$",'\$\S*: \([.0-9]\+\) \$','\1','')
+  silent! let s:install_status =
+      \ s:SpellInstallDocumentation(expand('<sfile>:p'), s:revision)
+  if (s:install_status == 1)
+      echom expand("<sfile>:t:r") . ' v' . s:revision .
+		\ ': Help-documentation installed.'
+  endif
+
+
 " Mappings and Settings.                                             {{{1
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
@@ -465,3 +595,179 @@ augroup xml
     au!
     au BufNewFile * call <SID>NewFileXML()
 augroup END
+"}}}1
+finish
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Section: Documentation content                                          {{{1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+=== START_DOC
+                                                *xml-plugin.txt* *xmledit.vim*
+XML Edit                                                             #version#
+
+A filetype plugin to help edit XML and SGML documents.
+
+This script provides some convenience when editing XML (and some SGML including
+HTML) formated documents. It allows you to jump to the beginning or end of the
+tag block your cursor is in. '%' will jump between '<' and '>' within the tag
+your cursor is in. When in insert mode and you finish a tag (pressing '>') the
+tag will be completed. If you press '>' twice it will complete the tag and
+place the cursor in the middle of the tags on it's own line (helps with nested
+tags).
+
+Usage: Place this file into your ftplugin directory. To add html support
+Sym-link or copy this file to html.vim in your ftplugin directory. To activte
+the script place 'filetype plugin on' in your |.vimrc| file. See |ftplugins|
+for more information on this topic.
+
+If the file edited is of type "html" and "xml_use_html" is  defined then the
+following tags will not auto complete:
+<img>, <input>, <param>, <frame>, <br>, <hr>, <meta>, <link>, <base>, <area>
+
+If the file edited is of type 'html' and 'xml_use_xhtml' is defined the above
+tags will autocomplete the xml closing staying xhtml compatable.
+ex. <hr> becomes <hr /> (see |xml-plugin-settings|)
+
+Note: If you used the VIM 5.x version of this file (xmledit.vim) you'll need to
+comment out the section where you called it. It is no longer used in the
+VIM 6.x version. 
+
+Maintainer: Devin Weaver <vim@tritarget.com>
+Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
+Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
+
+Known Bugs ~
+
+- This script will modify registers ". and "x; register "" will be restored.
+- < & > marks inside of a CDATA section are interpreted as actual XML tags
+  even if unmatched.
+- Although the script can handle leading spaces such as < tag></ tag> it is
+  illegal XML syntax and considered very bad form.
+- Placing a literal `>' in an attribute value will auto complete dispite that
+  the start tag isn't finished. This is poor XML anyway you should use
+  &gt; instead.
+- The matching algorithm can handle illegal tag characters where as the tag
+  completion algorithm can not.
+
+Mappings ~                                              *xml-plugin-mappings*
+
+<Leader> is a setting in VIM that depicts a prefix for scripts and plugins to
+use. By default this is the backslash key `\'. See |mapleader| for details.
+
+<Leader>x
+        Visual - Place a custom XML tag to suround the selected text. You need
+        to have selected text in visual mode before you can use this mapping.
+        See |visual-mode| for details.
+
+<Leader>.   or   <Leader>>
+        Insert - Place a literal '>' without parsing tag.
+
+<Leader>5   or   <Leader>%
+        Normal - Jump to the begining or end tag.
+
+<Leader>d
+        Normal - Deletes the surrounding tags from the cursor. >
+            <tag1>outter <tag2>inner text</tag2> text</tag1>
+                    ^
+<       Turns to: >
+            outter <tag2>inner text</tag2> text
+            ^
+<
+
+OPTIONS                                                 *xml-plugin-settings*
+
+(All options must be placed in your |.vimrc| prior to the |ftplugin| command.)
+
+xml_tag_completion_map
+        Use this setting to change the default mapping to auto complete a tag.
+        By default typing a literal `>' will cause the tag your editing to auto
+        complete; pressing twice will auto nest the tag. By using this setting
+        the `>' will be a literal `>' and you must use the new mapping to
+        perform auto completion and auto nesting. For example if you wanted
+        Control-L to perform auto completion inmstead of typing a `>' place the
+        following into your .vimrc: >
+            let xml_tag_completion_map = "<C-l>"
+<
+xml_no_auto_nesting
+        This turns off the auto nesting feature. After a completion is made and
+        another `>' is typed xml-edit automatically will break the tag accross
+        multiple lines and indent the curser to make creating nested tqags
+        easier. This feature turns it off. Enter the following in your .vimrc: >
+            let xml_no_auto_nesting = 1
+<
+xml_use_xhtml
+        When editing HTML this will auto close the short tags to make
+        valid XML like <hr /> and <br />. Enter the following in your vimrc to
+        turn this option on: >
+            let xml_use_xhtml = 1
+<
+xml_no_html
+        This turns of the support for HTML specific tags. Place this in your
+        .vimrc: >
+            let xml_no_html = 1
+<
+CALLBACK FUNCTIONS                                      *xml-plugin-callbacks*
+
+A callback function is a function used to customize features on a per tag
+basis. For example say you wish to have a default set of attributs when you
+type an empty tag like this:
+    You type: <tag>
+    You get:  <tag default="attributes"></tag>
+
+This is for any script programmers who wish to add xml-plugin support to there
+own filetype plugins.
+
+Callback functions recive one attribute variable which is the tag name. The all
+must return either a string or the number zero. If it returns a string the
+plugin will place the string in the proper location. If it is a zero the plugin
+will ignore and continue as if no callback existed.
+
+The following are implemented callback functions:
+
+HtmlAttribCallback
+        This is used to add default attributes to html tag. It is intended for
+        HTML files only.
+
+XmlAttribCallback
+        This is a generic callback for xml tags intended to add attributes.
+
+CALLBACK EXAMPLE
+
+The following is an example of using XmlAttribCallback in your .vimrc
+>
+        function XmlAttribCallback (xml_tag)
+            if a:xml_tag ==? "my-xml-tag"
+                return "attributes=\"my xml attributes\""
+            else
+                return 0
+            endif
+        endfunction
+<
+The following is a sample html.vim file type plugin you could use:
+>
+        " Only do this when not done yet for this buffer
+        if exists("b:did_ftplugin")
+          finish
+        endif
+        " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
+
+        if !exists("HtmlAttribCallback")
+        function HtmlAttribCallback( xml_tag )
+            if a:xml_tag ==? "table"
+                return "cellpadding=\"0\" cellspacing=\"0\" border=\"0\""
+            elseif a:xml_tag ==? "link"
+                return "href=\"/site.css\" rel=\"StyleSheet\" type=\"text/css\""
+            elseif a:xml_tag ==? "body"
+                return "bgcolor=\"white\""
+            else
+                return 0
+            endif
+        endfunction
+        endif
+
+        " On to loading xml.vim
+        runtime ftplugin/xml.vim
+<
+
+==============================================================================
+=== END_DOC
