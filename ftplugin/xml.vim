@@ -8,18 +8,8 @@
 "               "Ma, Xiangjiang" <Xiangjiang.Ma@broadvision.com>
 
 " This script provides some convenience when editing XML (and some SGML)
-" formated documents. <M-5> will jump to the beginning or end of the tag block
-" your cursor is in. % will jump between '<' and '>' within the tag your
-" cursor is in. when in insert mode and you finish a tag (pressing '>') the
-" tag will be completed. If you press '>' twice it will complete the tag and
-" break it across a blank. If you want to enter a literal '>' without
-" parsing use <M-.>
+" formated documents.
 
-" Usage: Place this file into your ftplugin directory. To add html support
-" Sym-link or copy this file to html.vim in your ftplugin directory. To
-" activte the script place 'filetype plugin on' in your .vimrc file.
-" see :help ftplugins for more information.
- 
 " Note: If you used the 5.x version of this file (xmledit.vim) you'll need to
 " comment out the section where you called it since it is no longer used in
 " version 6.x. 
@@ -27,26 +17,10 @@
 " Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 " Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
 
-" Options:
-" xml_use_xhtml - When editing HTML this will auto close the short tags to make
-"     valid XML like <hr /> and <br />. Enter the following in your vimrc to
-"     turn this option on:
-"         let xml_use_xhtml = 1
+" PLEASE READ the associated documentation that came with this plugin for
+" usage, mappings, and settings.
 
-" Maps: The following maps have ben created to help you in your XML editing.
-"  Map  | Mode   | Description
-" ------+--------+-------------
-" \x    | Visual | Place a custom XML tag to suround the selected text.
-" <M-.> | Insert | Place a literal '>' without parsing tag.
-" <M-5> | Normal | Jump to the begining or end tag.
-
-" Known Bugs:
-" - < & > marks inside of a CDATA section are interpreted as actual XML tags
-"   even if unmatched.
-" - Although the script can handle leading spaces such as < tag></ tag> it is
-"   illegal XML syntax and considered very bad form.
-" - The matching algorithm can handle illegal tag characters where as the tag
-"   completion algorithm can not.
+"==============================================================================
 
 " Only do this when not done yet for this buffer
 if exists("b:did_ftplugin")
@@ -109,7 +83,7 @@ endif
 
 if !exists("*s:ParseTag")
 function s:ParseTag( )
-    if strpart (getline ("."), col (".") - 2, 2) == '>>'
+    if (!exists("g:xml_no_auto_nesting") && strpart (getline ("."), col (".") - 2, 2) == '>>')
 	let multi_line = 1
 	execute "normal! X"
     else
@@ -119,7 +93,7 @@ function s:ParseTag( )
     let @" = ""
     execute "normal! y%%"
     let ltag = @"
-    if (&filetype == 'html') && (exists ("g:xml_use_html") || exists ("g:xml_use_xhtml"))
+    if (&filetype == 'html') && (!exists ("g:xml_no_html"))
 	let html_mode = 1
 	let ltag = substitute (ltag, '[^[:graph:]]\+', ' ', 'g')
 	let ltag = substitute (ltag, '<\s*\([^[:alnum:]_:\-[:blank:]]\=\)\s*\([[:alnum:]_:\-]\+\)\>', '<\1\2', '')
@@ -359,7 +333,11 @@ nnoremap <buffer> <Leader>% :call <SID>TagMatch1()<Cr>
 vnoremap <buffer> <Leader>x "xx"=<SID>WrapTag(@x)<Cr>P
 
 " Parse the tag after pressing the close '>'.
-inoremap <buffer> > ><Esc>:call <SID>ParseTag()<Cr>
+if !exists("g:xml_tag_completion_map")
+    inoremap <buffer> > ><Esc>:call <SID>ParseTag()<Cr>
+else
+    execute "inoremap <buffer> " . g:xml_tag_completion_map . " ><Esc>:call <SID>ParseTag()<Cr>"
+endif
 
 augroup xml
     au!
