@@ -1,4 +1,4 @@
-" Vim script file
+" Vim script file                                           vim600:fdm=marker:
 " FileType:	XML
 " Maintainer:	Devin Weaver <vim@tritarget.com>
 " Last Change:  $Date$
@@ -28,7 +28,7 @@ if exists("b:did_ftplugin")
 endif
 let b:did_ftplugin = 1
 
-
+" WrapTag -> Places an XML tag around a visual selection.            {{{1
 " Brad Phelan: Wrap the argument in an XML tag
 " Added nice GUI support to the dialogs. 
 if !exists("*s:WrapTag") 
@@ -49,6 +49,7 @@ function s:WrapTag(text)
 endfunction
 endif
 
+" NewFileXML -> Inserts <?xml?> at top of new file.                  {{{1
 if !exists("*s:NewFileXML")
 function s:NewFileXML( )
     " Where is g:did_xhtmlcf_inits defined?
@@ -61,6 +62,7 @@ endfunction
 endif
 
 
+" IsParsableTag -> Check to see if the tag is a real tag.            {{{1
 if !exists("*s:IsParsableTag")
 function s:IsParsableTag( tag )
     " The "Should I parse?" flag.
@@ -81,6 +83,7 @@ endfunction
 endif
 
 
+" ParseTag -> The major work hourse for tag completion.              {{{1
 if !exists("*s:ParseTag")
 function s:ParseTag( )
     " Save registers
@@ -153,6 +156,7 @@ endfunction
 endif
 
 
+" BuildTagName -> Grabs the tag's name for tag matching.             {{{1
 if !exists("*s:BuildTagName")
 function s:BuildTagName( )
   "First check to see if we
@@ -185,6 +189,7 @@ function s:BuildTagName( )
 endfunction
 endif
 
+" TagMatch1 -> First step in tag matching.                           {{{1 
 " Brad Phelan: First step in tag matching.
 if !exists("*s:TagMatch1")
 function s:TagMatch1()
@@ -226,6 +231,7 @@ endfunction
 endif
 
 
+" TagMatch2 -> Second step in tag matching.                          {{{1
 " Brad Phelan: Second step in tag matching.
 if !exists("*s:TagMatch2")
 function s:TagMatch2(tag,endtag)
@@ -314,6 +320,7 @@ function s:TagMatch2(tag,endtag)
 endfunction
 endif
 
+" MisMatchedTag -> What to do if a tag is mismatched.                {{{1
 if !exists("*s:MisMatchedTag")
 function s:MisMatchedTag( id, tag )
     "Jump back to our formor spot
@@ -328,6 +335,7 @@ function s:MisMatchedTag( id, tag )
 endfunction
 endif
 
+" Mappings and Settings.                                             {{{1
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
 
