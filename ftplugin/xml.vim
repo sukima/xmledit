@@ -37,19 +37,50 @@ let b:did_ftplugin = 1
 " Added nice GUI support to the dialogs. 
 if !exists("*s:WrapTag") 
 function s:WrapTag(text)
+    if (line(".") < line("'<"))
+	let insert_cmd = "o"
+    elseif (col(".") < col("'<"))
+	let insert_cmd = "a"
+    else
+	let insert_cmd = "i"
+    endif
     if strlen(a:text) > 10
 	let input_text = strpart(a:text, 0, 10) . '...'
     else
 	let input_text = a:text
     endif
     let wraptag = inputdialog('Tag to wrap "' . input_text . '" : ')
-    let atts = inputdialog('Attributes in <' . wraptag . '> : ')
-    if strlen(atts)==0                                                        
-	let text = '<'.wraptag.'>'.a:text.'</'.wraptag.'>'                     
-    else                                                                      
-	let text = '<'.wraptag.' '.atts.'>'.a:text.'</'.wraptag.'>'            
-    endif                                                                     
-    return text                                                               
+    if strlen(wraptag)==0
+	if strlen(b:last_wrap_tag_used)==0
+	    undo
+	    return
+	endif
+	let wraptag = b:last_wrap_tag_used
+	let atts = b:last_wrap_atts_used
+    else
+	let atts = inputdialog('Attributes in <' . wraptag . '> : ')
+    endif
+    if (visualmode() == 'V')
+	let text = strpart(a:text,0,strlen(a:text)-1)
+	if (insert_cmd == "o")
+	    let eol_cmd = ""
+	else
+	    let eol_cmd = "\<Cr>"
+	endif
+    else
+	let text = a:text
+	let eol_cmd = ""
+    endif
+    if strlen(atts)==0
+	let text = "<".wraptag.">".text."</".wraptag.">"
+	let b:last_wrap_tag_used = wraptag
+	let b:last_wrap_atts_used = ""
+    else
+	let text = "<".wraptag." ".atts.">".text."</".wraptag.">"
+	let b:last_wrap_tag_used = wraptag
+	let b:last_wrap_atts_used = atts
+    endif
+    execute "normal! ".insert_cmd.text.eol_cmd
 endfunction
 endif
 
@@ -397,8 +428,10 @@ setlocal matchpairs+=<:>
 
 " Have this as an escape incase you want a literal '>' not to run the
 " ParseTag function.
-inoremap <buffer> <Leader>. >
-inoremap <buffer> <Leader>> >
+if !exists("g:xml_tag_completion_map")
+    inoremap <buffer> <Leader>. >
+    inoremap <buffer> <Leader>> >
+endif
 
 " Jump between the beggining and end tags.
 nnoremap <buffer> <Leader>5 :call <SID>TagMatch1()<Cr>
@@ -406,7 +439,7 @@ nnoremap <buffer> <Leader>% :call <SID>TagMatch1()<Cr>
 nnoremap <buffer> <Leader>d :call <SID>DeleteTag()<Cr>
 
 " Wrap selection in XML tag
-vnoremap <buffer> <Leader>x "xx"=<SID>WrapTag(@x)<Cr>P
+vnoremap <buffer> <Leader>x "xx:call <SID>WrapTag(@x)<Cr>
 
 " Parse the tag after pressing the close '>'.
 if !exists("g:xml_tag_completion_map")
