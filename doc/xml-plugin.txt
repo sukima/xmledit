@@ -44,10 +44,15 @@ Known Bugs ~
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
-Mappings ~
+Mappings ~                                              *xml-plugin-mappings*
+
+<Leader> is a setting in VIM that depicts a prefix for scripts and plugins to
+use. By default this is the backslash key `\'. See |mapleader| for details.
 
 <Leader>x
-	Visual - Place a custom XML tag to suround the selected text.
+	Visual - Place a custom XML tag to suround the selected text. You need
+	to have selected text in visual mode before you can use this mapping.
+	See |visual-mode| for details.
 
 <Leader>.   or   <Leader>>
 	Insert - Place a literal '>' without parsing tag.
