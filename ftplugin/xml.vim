@@ -89,7 +89,7 @@ endif
 if !exists("*s:NewFileXML")
 function s:NewFileXML( )
     " Where is g:did_xhtmlcf_inits defined?
-    if &filetype == 'xml' || (!exists ("g:did_xhtmlcf_inits") && exists ("g:xml_use_xhtml") && &filetype == 'html')
+    if &filetype == 'xml' || (!exists ("g:did_xhtmlcf_inits") && exists ("g:xml_use_xhtml") && (&filetype == 'html' || &filetype == 'xhtml'))
 	if append (0, '<?xml version="1.0"?>')
 	    normal! G
 	endif
@@ -140,6 +140,7 @@ if !exists("*s:ParseTag")
 function s:ParseTag( )
     " Save registers
     let old_reg_save = @"
+    let old_save_x   = @x
 
     if (!exists("g:xml_no_auto_nesting") && strpart (getline ("."), col (".") - 2, 2) == '>>')
 	let multi_line = 1
@@ -151,7 +152,7 @@ function s:ParseTag( )
     let @" = ""
     execute "normal! \"xy%%"
     let ltag = @"
-    if (&filetype == 'html') && (!exists ("g:xml_no_html"))
+    if (&filetype == 'html' || &filetype == 'xhtml') && (!exists ("g:xml_no_html"))
 	let html_mode = 1
 	let ltag = substitute (ltag, '[^[:graph:]]\+', ' ', 'g')
 	let ltag = substitute (ltag, '<\s*\([^[:alnum:]_:\-[:blank:]]\=\)\s*\([[:alnum:]_:\-]\+\)\>', '<\1\2', '')
@@ -195,6 +196,11 @@ function s:ParseTag( )
 		set comments-=n:>
 		execute "normal! a\<Cr>\<Cr>\<Esc>kAx\<Esc>>>$\"xx"
 		execute "set comments=" . com_save
+
+		" restore registers
+		let @" = old_reg_save
+		let @x = old_save_x
+
 		startinsert!
 		return ""
 	    else
@@ -208,6 +214,7 @@ function s:ParseTag( )
 
     " restore registers
     let @" = old_reg_save
+    let @x = old_save_x
 
     if col (".") < strlen (getline ("."))
 	execute "normal! l"
@@ -231,11 +238,12 @@ endif
 " BuildTagName -> Grabs the tag's name for tag matching.             {{{1
 if !exists("*s:BuildTagName")
 function s:BuildTagName( )
-  "First check to see if we
-  "Are allready on the end
-  "of the tag. The / search
-  "forwards command will jump
-  "to the next tag otherwise
+  "First check to see if we Are allready on the end of the tag. The / search
+  "forwards command will jump to the next tag otherwise
+
+  " Store contents of register x in a variable
+  let b:xreg = @x 
+
   exec "normal! v\"xy"
   if @x=='>'
      " Don't do anything
@@ -258,6 +266,11 @@ function s:BuildTagName( )
   " remove spaces.
   let @x=substitute(@x,'/\s*','/', '')
   let @x=substitute(@x,'^\s*','', '')
+
+  " Swap @x and b:xreg
+  let temp = @x
+  let @x = b:xreg
+  let b:xreg = temp
 endfunction
 endif
 
@@ -274,9 +287,8 @@ function s:TagMatch1()
 
   call <SID>BuildTagName()
 
-  "Check to see if it is an end tag
-  "If it is place a 1 in the register y
-  if match(@x, '^/')==-1
+  "Check to see if it is an end tag. If it is place a 1 in endtag
+  if match(b:xreg, '^/')==-1
     let endtag = 0
   else
     let endtag = 1  
@@ -288,14 +300,14 @@ function s:TagMatch1()
  " we will end up with 
  "   tag
  " with no trailing or leading spaces
- let @x=substitute(@x,'^/','','g')
+ let b:xreg=substitute(b:xreg,'^/','','g')
 
  " Make sure the tag is valid.
  " Malformed tags could be <?xml ?>, <![CDATA[]]>, etc.
- if match(@x,'^[[:alnum:]_:\-]') != -1
+ if match(b:xreg,'^[[:alnum:]_:\-]') != -1
      " Pass the tag to the matching 
      " routine
-     call <SID>TagMatch2(@x, endtag)
+     call <SID>TagMatch2(b:xreg, endtag)
  endif
  " Restore registers
  let @" = old_reg_save
@@ -375,7 +387,7 @@ function s:TagMatch2(tag,endtag)
 
      call <SID>BuildTagName()
 
-     if match(@x,'^/')==-1
+     if match(b:xreg,'^/')==-1
 	" Found start tag
 	let stk = stk + iter 
      else
