@@ -29,8 +29,8 @@
 
 " Options:
 " xml_use_xhtml - When editing HTML this will auto close the short tags to make
-"     valid XML like <hr /> and <br />. This option overrides xml_use_html.
-"     Enter the following in your vimrc to turn this option on:
+"     valid XML like <hr /> and <br />. Enter the following in your vimrc to
+"     turn this option on:
 "         let xml_use_xhtml = 1
 
 " Maps: The following maps have ben created to help you in your XML editing.
