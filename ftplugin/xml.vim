@@ -188,12 +188,12 @@ endif
 
 
 " ParseTag2 -> Experimental function to replace ParseTag             {{{1
-if !exists("*s:ParseTag2")
-function s:ParseTag2( )
+"if !exists("*s:ParseTag2")
+"function s:ParseTag2( )
     " My thought is to pull the tag out and reformat it to a normalized tag
     " and put it back.
-endfunction
-endif
+"endfunction
+"endif
 
 
 " BuildTagName -> Grabs the tag's name for tag matching.             {{{1
