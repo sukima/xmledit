@@ -83,15 +83,18 @@ endif
 
 if !exists("*s:ParseTag")
 function s:ParseTag( )
+    " Save registers
+    let old_reg_save = @"
+
     if (!exists("g:xml_no_auto_nesting") && strpart (getline ("."), col (".") - 2, 2) == '>>')
 	let multi_line = 1
-	execute "normal! X"
+	execute "normal! \"xX"
     else
 	let multi_line = 0
     endif
 
     let @" = ""
-    execute "normal! y%%"
+    execute "normal! \"xy%%"
     let ltag = @"
     if (&filetype == 'html') && (!exists ("g:xml_no_html"))
 	let html_mode = 1
@@ -127,7 +130,7 @@ function s:ParseTag( )
 		" Also >> doesn't shift on an empty line hence the temporary char 'x'
 		let com_save = &comments
 		set comments-=n:>
-		execute "normal! a\<Cr>\<Cr>\<Esc>kAx\<Esc>>>$x"
+		execute "normal! a\<Cr>\<Cr>\<Esc>kAx\<Esc>>>$\"xx"
 		execute "set comments=" . com_save
 		startinsert!
 		return ""
@@ -136,6 +139,9 @@ function s:ParseTag( )
 	    endif
 	endif
     endif
+
+    " restore registers
+    let @" = old_reg_save
 
     if col (".") < strlen (getline ("."))
 	execute "normal! l"
@@ -182,6 +188,9 @@ endif
 " Brad Phelan: First step in tag matching.
 if !exists("*s:TagMatch1")
 function s:TagMatch1()
+  " Save registers
+  let old_reg_save = @"
+
   "Drop a marker here just in case we have a mismatched tag and
   "wish to return (:mark looses column position)
   normal! mz
@@ -211,6 +220,8 @@ function s:TagMatch1()
      " routine
      call <SID>TagMatch2(@x, endtag)
  endif
+ " Restore registers
+ let @" = old_reg_save
 endfunction
 endif
 
