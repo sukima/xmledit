@@ -56,7 +56,8 @@ let b:did_ftplugin = 1
 
 
 " Brad Phelan: Wrap the argument in an XML tag
-function <SID>WrapTag(text)
+if !exists("*s:WrapTag") 
+function s:WrapTag(text)
     let wraptag = input('tag : ')                                             
     let atts = input('attributes : ')                                         
     if strlen(atts)==0                                                        
@@ -65,9 +66,11 @@ function <SID>WrapTag(text)
 	let text = '<'.wraptag.' '.atts.'>'.a:text.'</'.wraptag.'>'            
     endif                                                                     
     return text                                                               
-endfunction                
+endfunction
+endif
 
-function <SID>NewFileXML( )
+if !exists("*s:NewFileXML")
+function s:NewFileXML( )
     " Where is g:did_xhtmlcf_inits defined?
     if &filetype == 'xml' || (!exists ("g:did_xhtmlcf_inits") && exists ("g:xml_use_xhtml") && &filetype == 'html')
 	if append (0, '<?xml version="1.0"?>')
@@ -75,9 +78,11 @@ function <SID>NewFileXML( )
 	endif
     endif
 endfunction
+endif
 
 
-function <SID>IsParsableTag( tag )
+if !exists("*s:IsParsableTag")
+function s:IsParsableTag( tag )
     " The "Should I parse?" flag.
     let parse = 1
 
@@ -93,9 +98,11 @@ function <SID>IsParsableTag( tag )
     
     return parse
 endfunction
+endif
 
 
-function <SID>ParseTag( )
+if !exists("*s:ParseTag")
+function s:ParseTag( )
     if strpart (getline ("."), col (".") - 2, 2) == '>>'
 	let multi_line = 1
 	execute "normal! X"
@@ -157,9 +164,11 @@ function <SID>ParseTag( )
 	startinsert!
     endif
 endfunction
+endif
 
 
-function <SID>BuildTagName( )
+if !exists("*s:BuildTagName")
+function s:BuildTagName( )
   "First check to see if we
   "Are allready on the end
   "of the tag. The / search
@@ -188,9 +197,11 @@ function <SID>BuildTagName( )
   let @x=substitute(@x,'/\s*','/', '')
   let @x=substitute(@x,'^\s*','', '')
 endfunction
+endif
 
 " Brad Phelan: First step in tag matching.
-function <SID>TagMatch1()
+if !exists("*s:TagMatch1")
+function s:TagMatch1()
   "Drop a marker here just in case we have a mismatched tag and
   "wish to return (:mark looses column position)
   normal! mz
@@ -221,10 +232,12 @@ function <SID>TagMatch1()
      call <SID>TagMatch2(@x, endtag)
  endif
 endfunction
+endif
 
 
 " Brad Phelan: Second step in tag matching.
-function <SID>TagMatch2(tag,endtag)
+if !exists("*s:TagMatch2")
+function s:TagMatch2(tag,endtag)
   let match_type=''
 
   " Build the pattern for searching for XML tags based
@@ -308,8 +321,10 @@ function <SID>TagMatch2(tag,endtag)
 
   let &wrapscan = wrapval
 endfunction
+endif
 
-function <SID>MisMatchedTag( id, tag )
+if !exists("*s:MisMatchedTag")
+function s:MisMatchedTag( id, tag )
     "Jump back to our formor spot
     normal! `z
     normal zz
@@ -320,6 +335,7 @@ function <SID>MisMatchedTag( id, tag )
     echo "Mismatched tag <" . a:tag . ">"
     echohl None
 endfunction
+endif
 
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
