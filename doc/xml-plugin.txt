@@ -126,7 +126,7 @@ CALLBACK EXAMPLE
 The following is an example of using XmlAttribCallback in your .vimrc
 >
 	function XmlAttribCallback (xml_tag)
-	    if xml_tag ==? "my-xml-tag"
+	    if a:xml_tag ==? "my-xml-tag"
 		return "attributes=\"my xml attributes\""
 	    else
 		return 0
