@@ -3,7 +3,7 @@
 " Maintainer:	Devin Weaver <vim@tritarget.com>
 " Last Change:	$Date$
 " Version:	$Revision$
-" Location:	http://tritarget.com/pub/vim/ftplugin/xml.vim
+" Location:	http://www.vim.org/scripts/script.php?script_id=301
 " Contributors: "Brad Phelan" <bphelan@mathworks.co.uk>,
 "		"Ma, Xiangjiang" <Xiangjiang.Ma@broadvision.com>
 
@@ -16,6 +16,7 @@
 
 " Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 " Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
+" Kudos to "Guo-Peng Wen" for the self install documentation code.
 
 " Section: Documentation 
 "----------------------------
@@ -498,8 +499,8 @@ function! s:SpellInstallDocumentation(full_name, revision)
     endif
 
     " Full name of script and documentation file:
-    let l:script_name = fnamemodify(a:full_name, ':t')
-    let l:doc_name    = fnamemodify(a:full_name, ':t:r') . '-plugin.txt'
+    let l:script_name = 'xml.vim'
+    let l:doc_name    = 'xml-plugin.txt'
     let l:plugin_file = l:vim_plugin_path . l:slash_char . l:script_name
     let l:doc_file    = l:vim_doc_path	  . l:slash_char . l:doc_name
 
@@ -567,7 +568,7 @@ endfunction
   silent! let s:install_status =
       \ s:SpellInstallDocumentation(expand('<sfile>:p'), s:revision)
   if (s:install_status == 1)
-      echom expand("<sfile>:t:r") . ' v' . s:revision .
+      echom expand("<sfile>:t:r") . '-plugin v' . s:revision .
 		\ ': Help-documentation installed.'
   endif
 
@@ -642,8 +643,9 @@ VIM 6.x version.
 Maintainer: Devin Weaver <vim@tritarget.com>
 Kudos to "Brad Phelan" for completing tag matching and visual tag completion.
 Kudos to "Ma, Xiangjiang" for pointing out VIM 6.0 map <buffer> feature.
+Kudos to "Guo-Peng Wen" for the self install documentation code.
 
-Known Bugs ~
+Known Bugs ~ {{{2
 
 - This script will modify registers ". and "x; register "" will be restored.
 - < & > marks inside of a CDATA section are interpreted as actual XML tags
@@ -656,7 +658,7 @@ Known Bugs ~
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
-Mappings ~						*xml-plugin-mappings*
+Mappings ~ {{{2						*xml-plugin-mappings*
 
 <Leader> is a setting in VIM that depicts a prefix for scripts and plugins to
 use. By default this is the backslash key `\'. See |mapleader| for details.
@@ -681,7 +683,7 @@ use. By default this is the backslash key `\'. See |mapleader| for details.
 	    ^
 <
 
-OPTIONS							*xml-plugin-settings*
+OPTIONS	{{{2						*xml-plugin-settings*
 
 (All options must be placed in your |.vimrc| prior to the |ftplugin| command.)
 
@@ -713,7 +715,7 @@ xml_no_html
 	.vimrc: >
 	    let xml_no_html = 1
 <
-CALLBACK FUNCTIONS					*xml-plugin-callbacks*
+CALLBACK FUNCTIONS {{{2					*xml-plugin-callbacks*
 
 A callback function is a function used to customize features on a per tag
 basis. For example say you wish to have a default set of attributs when you
@@ -738,7 +740,7 @@ HtmlAttribCallback
 XmlAttribCallback
 	This is a generic callback for xml tags intended to add attributes.
 
-CALLBACK EXAMPLE
+CALLBACK EXAMPLE {{{2
 
 The following is an example of using XmlAttribCallback in your .vimrc
 >
@@ -775,8 +777,6 @@ The following is a sample html.vim file type plugin you could use:
 	" On to loading xml.vim
 	runtime ftplugin/xml.vim
 <
-
-==============================================================================
 === END_DOC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " v im:tw=78:ts=8:ft=help:norl:
