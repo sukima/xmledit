@@ -638,8 +638,9 @@ finish
 " Section: Documentation content                                          {{{1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 === START_DOC
-                                                *xml-plugin.txt* *xmledit.vim*
-XML Edit {{{2                                                        #version# ~
+*xml-plugin.txt*  Help edit XML and SGML documents.                  #version#
+
+				   XML Edit {{{2 ~
 
 A filetype plugin to help edit XML and SGML documents.
 
