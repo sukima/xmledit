@@ -467,7 +467,7 @@ endfunction
 endif
  
 " Section: Doc installation {{{1
-" Function: s:SpellInstallDocumentation(full_name, revision)              {{{2
+" Function: s:XmlInstallDocumentation(full_name, revision)              {{{2
 "   Install help documentation.
 " Arguments:
 "   full_name: Full name of this vim plugin script, including path name.
@@ -478,7 +478,7 @@ endif
 " Note: Cleaned and generalized by guo-peng Wen
 "'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-function! s:SpellInstallDocumentation(full_name, revision)
+function! s:XmlInstallDocumentation(full_name, revision)
     " Name of the document path based on the system we use:
     if (has("unix"))
         " On UNIX like system, using forward slash:
@@ -592,7 +592,7 @@ endfunction
 let s:revision=
       \ substitute("$Revision$",'\$\S*: \([.0-9]\+\) \$','\1','')
 silent! let s:install_status =
-    \ s:SpellInstallDocumentation(expand('<sfile>:p'), s:revision)
+    \ s:XmlInstallDocumentation(expand('<sfile>:p'), s:revision)
 if (s:install_status == 1)
     echom expand("<sfile>:t:r") . '-plugin v' . s:revision .
         \ ': Help-documentation installed.'
