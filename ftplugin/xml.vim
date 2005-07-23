@@ -205,12 +205,9 @@ function s:ParseTag( )
             if multi_line
                 " Can't use \<Tab> because that indents 'tabstop' not 'shiftwidth'
                 " Also >> doesn't shift on an empty line hence the temporary char 'x'
-		" Ignore >> since the user might not want auto indent. we'll
-		" use regular user indenting
                 let com_save = &comments
                 set comments-=n:>
-                " execute "normal! a\<Cr>\<Cr>\<Esc>kAx\<Esc>>>$\"xx"
-                execute "normal! a\<Cr>x\<Cr>\<Esc>k$x"
+                execute "normal! a\<Cr>\<Cr>\<Esc>kAx\<Esc>>>$\"xx"
                 execute "set comments=" . com_save
 
                 " restore registers
