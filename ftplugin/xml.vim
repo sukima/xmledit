@@ -15,6 +15,8 @@
 "               Luc Hermitte <hermitte (at) free.fr> for testing the self
 "                 install documentation code and providing good bug fixes.
 "               Guo-Peng Wen for the self install documentation code.
+"               Shawn Boles <ickybots (at) gmail.com> for fixing the
+"                 <Leader>x cancelation bug. 
 
 " This script provides some convenience when editing XML (and some SGML)
 " formated documents.
@@ -44,6 +46,9 @@ if exists("b:did_ftplugin")
   finish
 endif
 let b:did_ftplugin = 1
+" sboles, init these variables so vim doesn't complain on wrap cancel
+let b:last_wrap_tag_used = ""
+let b:last_wrap_atts_used = ""
 
 " WrapTag -> Places an XML tag around a visual selection.            {{{1
 " Brad Phelan: Wrap the argument in an XML tag
