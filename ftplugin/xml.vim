@@ -471,6 +471,23 @@ function s:VisualTag( )
 endfunction
 endif
  
+" InsertGt -> close tags only if the cursor is in a HTML or XML context {{{1
+" Else continue editing
+if !exists("*s:InsertGt")
+function s:InsertGt( )
+  let s:syn=synIDattr(synID(line("."), col("."), 1), "name")
+  if 0 == match(s:syn, 'html') || 0 == match(s:syn, 'xml')
+    call <SID>ParseTag()
+  else
+    if col(".") == col("$") - 1
+      startinsert!
+    else 
+      execute "normal! l"
+      startinsert
+    endif
+  endif
+endfunction
+
 " Section: Doc installation {{{1
 " Function: s:XmlInstallDocumentation(full_name, revision)              {{{2
 "   Install help documentation.
@@ -627,7 +644,8 @@ nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
 
 " Parse the tag after pressing the close '>'.
 if !exists("g:xml_tag_completion_map")
-    inoremap <buffer> > ><Esc>:call <SID>ParseTag()<Cr>
+    " inoremap <buffer> > ><Esc>:call <SID>ParseTag()<Cr>
+    inoremap <buffer> > ><Esc>:call <SID>InsertGt()<Cr>
 else
     execute "inoremap <buffer> " . g:xml_tag_completion_map . " ><Esc>:call <SID>ParseTag()<Cr>"
 endif
