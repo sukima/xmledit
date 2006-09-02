@@ -487,6 +487,7 @@ function s:InsertGt( )
     endif
   endif
 endfunction
+endif
 
 " Section: Doc installation {{{1
 " Function: s:XmlInstallDocumentation(full_name, revision)              {{{2
