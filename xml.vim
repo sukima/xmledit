@@ -180,11 +180,7 @@ function s:ParseTag( )
 
     if <SID>IsParsableTag (ltag)
         " find the break between tag name and atributes (or closing of tag)
-        " Too bad I can't just grab the position index of a pattern in a string.
-        let index = 1
-        while index < strlen (ltag) && strpart (ltag, index, 1) =~ '[[:alnum:]_:\-]'
-            let index = index + 1
-        endwhile
+	let index = matchend (ltag, '[[:alnum:]_:\-]\+')
 
         let tag_name = strpart (ltag, 1, index - 1)
         if strpart (ltag, index) =~ '[^/>[:blank:]]'
@@ -475,8 +471,14 @@ endif
 " Else continue editing
 if !exists("*s:InsertGt")
 function s:InsertGt( )
-  let s:syn=synIDattr(synID(line("."), col("."), 1), "name")
-  if 0 == match(s:syn, 'html') || 0 == match(s:syn, 'xml')
+  " When the current char is text within a tag it will not proccess as a
+  " syntax'ed element and return nothing below. Since the multi line wrap
+  " feture relies on using the '>' char as text within a tag we must use the
+  " char prior to establish if it is valid html/xml
+  if (getline('.')[col('.') - 1] == '>')
+    let char_syn=synIDattr(synID(line("."), col(".") - 1, 1), "name")
+  endif
+  if 0 == match(char_syn, 'html') || 0 == match(char_syn, 'xml')
     call <SID>ParseTag()
   else
     if col(".") == col("$") - 1
@@ -625,6 +627,7 @@ endif
 " Mappings and Settings.                                             {{{1
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
+setlocal commentstring=<!--%s-->
 
 " Have this as an escape incase you want a literal '>' not to run the
 " ParseTag function.
