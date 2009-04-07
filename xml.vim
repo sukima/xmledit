@@ -1,9 +1,9 @@
 " Vim script file                                           vim600:fdm=marker:
 " FileType:     XML
-" Author:       Devin Weaver <vim (at) tritarget.com> 
-" Maintainer:   Devin Weaver <vim (at) tritarget.com>
-" Last Change:  $Date: 2009-02-17 06:04:49 -0500 (Tue, 17 Feb 2009) $
-" Version:      $Revision: 83 $
+" Author:       Devin Weaver <suki (at) tritarget.com> 
+" Maintainer:   Devin Weaver <suki (at) tritarget.com>
+" Last Change:  Tue Apr 07 11:12:08 EDT 2009
+" Version:      1.84
 " Location:     http://www.vim.org/scripts/script.php?script_id=301
 " Licence:      This program is free software; you can redistribute it
 "               and/or modify it under the terms of the GNU General Public
@@ -660,8 +660,10 @@ function! s:XmlInstallDocumentation(full_name, revision)
 endfunction
 " }}}2
 
+let s:script_lines = readfile(expand("<sfile>"), "", 6)
 let s:revision=
-      \ substitute("$Revision: 83 $",'\$\S*: \([.0-9]\+\) \$','\1','')
+      \ substitute(s:script_lines[5], '^" Version:\s*\|\s*$', '', '')
+"      \ substitute("$Revision: 83 $",'\$\S*: \([.0-9]\+\) \$','\1','')
 silent! let s:install_status =
     \ s:XmlInstallDocumentation(expand('<sfile>:p'), s:revision)
 if (s:install_status == 1)
