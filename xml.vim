@@ -2,8 +2,8 @@
 " FileType:     XML
 " Author:       Devin Weaver <vim (at) tritarget.com> 
 " Maintainer:   Devin Weaver <vim (at) tritarget.com>
-" Last Change:  $Date$
-" Version:      $Revision$
+" Last Change:  $Date: 2009-02-17 06:04:49 -0500 (Tue, 17 Feb 2009) $
+" Version:      $Revision: 83 $
 " Location:     http://www.vim.org/scripts/script.php?script_id=301
 " Licence:      This program is free software; you can redistribute it
 "               and/or modify it under the terms of the GNU General Public
@@ -17,6 +17,8 @@
 "               Guo-Peng Wen for the self install documentation code.
 "               Shawn Boles <ickybots (at) gmail.com> for fixing the
 "                 <Leader>x cancelation bug. 
+"               Martijn van der Kwast <mvdkwast@gmx.net> for patching
+"                 problems with multi-languages (XML and PHP).
 
 " This script provides some convenience when editing XML (and some SGML)
 " formated documents.
@@ -45,7 +47,6 @@
 if exists("b:did_ftplugin")
   finish
 endif
-let b:did_ftplugin = 1
 " sboles, init these variables so vim doesn't complain on wrap cancel
 let b:last_wrap_tag_used = ""
 let b:last_wrap_atts_used = ""
@@ -107,7 +108,7 @@ endif
 if !exists("*s:NewFileXML")
 function s:NewFileXML( )
     " Where is g:did_xhtmlcf_inits defined?
-    if &filetype == 'xml' || (!exists ("g:did_xhtmlcf_inits") && exists ("g:xml_use_xhtml") && (&filetype == 'html' || &filetype == 'xhtml'))
+    if &filetype == 'docbk' || &filetype == 'xml' || (!exists ("g:did_xhtmlcf_inits") && exists ("g:xml_use_xhtml") && (&filetype == 'html' || &filetype == 'xhtml'))
         if append (0, '<?xml version="1.0"?>')
             normal! G
         endif
@@ -180,7 +181,7 @@ function s:ParseTag( )
 
     if <SID>IsParsableTag (ltag)
         " find the break between tag name and atributes (or closing of tag)
-	let index = matchend (ltag, '[[:alnum:]_:\-]\+')
+        let index = matchend (ltag, '[[:alnum:]_:\-]\+')
 
         let tag_name = strpart (ltag, 1, index - 1)
         if strpart (ltag, index) =~ '[^/>[:blank:]]'
@@ -209,19 +210,19 @@ function s:ParseTag( )
                 let com_save = &comments
                 set comments-=n:>
                 execute "normal! a\<Cr>\<Cr>\<Esc>kAx\<Esc>>>$\"xx"
-                execute "set comments=" . com_save
-
-                " restore registers
-                let @" = old_reg_save
-                let @x = old_save_x
-
-                startinsert!
-                return ""
+                execute "set comments=" . substitute(com_save, " ", "\\\\ ", "g")
             else
                 if has_attrib == 0
                     call <SID>Callback (tag_name, html_mode)
                 endif
-                execute "normal! a</" . tag_name . ">\<Esc>" . index . "h"
+                if exists("g:xml_jump_string")
+                    let index = index + strlen(g:xml_jump_string)
+                    let jump_char = g:xml_jump_string
+                    call <SID>InitEditFromJump()
+                else
+                    let jump_char = ""
+                endif
+                execute "normal! a</" . tag_name . ">" . jump_char . "\<Esc>" . index . "h"
             endif
         endif
     endif
@@ -230,11 +231,11 @@ function s:ParseTag( )
     let @" = old_reg_save
     let @x = old_save_x
 
-    if col (".") < strlen (getline ("."))
+    if multi_line
+        startinsert!
+    else
         execute "normal! l"
         startinsert
-    else
-        startinsert!
     endif
 endfunction
 endif
@@ -454,10 +455,10 @@ endif
 if !exists("*s:VisualTag")
 function s:VisualTag( ) 
     if strpart (getline ("."), col (".") - 1, 1) == "<"
-	normal! l
+        normal! l
     endif
     if search ("<[^\/]", "bW") == 0
-	return
+        return
     endif
     normal! mz
     normal \5
@@ -471,6 +472,10 @@ endif
 " Else continue editing
 if !exists("*s:InsertGt")
 function s:InsertGt( )
+  let save_matchpairs = &matchpairs
+  set matchpairs-=<:>
+  execute "normal! a>"
+  execute "set matchpairs=" . save_matchpairs
   " When the current char is text within a tag it will not proccess as a
   " syntax'ed element and return nothing below. Since the multi line wrap
   " feture relies on using the '>' char as text within a tag we must use the
@@ -478,7 +483,7 @@ function s:InsertGt( )
   if (getline('.')[col('.') - 1] == '>')
     let char_syn=synIDattr(synID(line("."), col(".") - 1, 1), "name")
   endif
-  if 0 == match(char_syn, 'html') || 0 == match(char_syn, 'xml')
+  if -1 == match(char_syn, "xmlProcessing") && (0 == match(char_syn, 'html') || 0 == match(char_syn, 'xml') || 0 == match(char_syn, 'docbk'))
     call <SID>ParseTag()
   else
     if col(".") == col("$") - 1
@@ -488,6 +493,47 @@ function s:InsertGt( )
       startinsert
     endif
   endif
+endfunction
+endif
+
+" InitEditFromJump -> Set some needed autocommands and syntax highlights for EditFromJump. {{{1
+if !exists("*s:InitEditFromJump")
+function s:InitEditFromJump( )
+    " Add a syntax highlight for the xml_jump_string.
+    execute "syntax match Error /\\V" . g:xml_jump_string . "/"
+endfunction
+endif
+
+" ClearJumpMarks -> Clean out extranious left over xml_jump_string garbage. {{{1
+if !exists("*s:ClearJumpMarks")
+function s:ClearJumpMarks( )
+    if exists("g:xml_jump_string")
+       if g:xml_jump_string != ""
+           execute ":%s/" . g:xml_jump_string . "//ge"
+       endif
+    endif
+endfunction
+endif
+
+" EditFromJump -> Jump to the end of the tag and continue editing. {{{1
+" g:xml_jump_string must be set.
+if !exists("*s:EditFromJump")
+function s:EditFromJump( )
+    if exists("g:xml_jump_string")
+        if g:xml_jump_string != ""
+            let foo = search(g:xml_jump_string, 'csW') " Moves cursor by default
+            execute "normal! " . strlen(g:xml_jump_string) . "x"
+            if col(".") == col("$") - 1
+                startinsert!
+            else
+                startinsert
+            endif
+        endif
+    else
+        echohl WarningMsg
+        echo "Function disabled. xml_jump_string not defined."
+        echohl None
+    endif
 endfunction
 endif
 
@@ -615,7 +661,7 @@ endfunction
 " }}}2
 
 let s:revision=
-      \ substitute("$Revision$",'\$\S*: \([.0-9]\+\) \$','\1','')
+      \ substitute("$Revision: 83 $",'\$\S*: \([.0-9]\+\) \$','\1','')
 silent! let s:install_status =
     \ s:XmlInstallDocumentation(expand('<sfile>:p'), s:revision)
 if (s:install_status == 1)
@@ -649,14 +695,23 @@ nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
 " Parse the tag after pressing the close '>'.
 if !exists("g:xml_tag_completion_map")
     " inoremap <buffer> > ><Esc>:call <SID>ParseTag()<Cr>
-    inoremap <buffer> > ><Esc>:call <SID>InsertGt()<Cr>
+    inoremap <buffer> > <Esc>:call <SID>InsertGt()<Cr>
 else
-    execute "inoremap <buffer> " . g:xml_tag_completion_map . " ><Esc>:call <SID>ParseTag()<Cr>"
+    execute "inoremap <buffer> " . g:xml_tag_completion_map . " <Esc>:call <SID>InsertGt()<Cr>"
 endif
+
+nnoremap <buffer> <LocalLeader><Space> :call <SID>EditFromJump()<Cr>
+inoremap <buffer> <LocalLeader><Space> <Esc>:call <SID>EditFromJump()<Cr>
+" Clear out all left over xml_jump_string garbage
+nnoremap <buffer> <LocalLeader>w :call <SID>ClearJumpMarks()<Cr>
+" The syntax files clear out any predefined syntax definitions. Recreate
+" this when ever a xml_jump_string is created. (in ParseTag)
 
 augroup xml
     au!
     au BufNewFile * call <SID>NewFileXML()
+    " Remove left over garbage from xml_jump_string on file save.
+    au BufWritePre <buffer> call <SID>ClearJumpMarks()
 augroup END
 "}}}1
 finish
@@ -667,7 +722,7 @@ finish
 === START_DOC
 *xml-plugin.txt*  Help edit XML and SGML documents.                  #version#
 
-				   XML Edit {{{2 ~
+                                   XML Edit {{{2 ~
 
 A filetype plugin to help edit XML and SGML documents.
 
@@ -710,17 +765,29 @@ Known Bugs {{{2 ~
   completion algorithm can not.
 
 ------------------------------------------------------------------------------
-							 *xml-plugin-mappings*
+                                                         *xml-plugin-mappings*
 Mappings {{{2 ~
 
 <LocalLeader> is a setting in VIM that depicts a prefix for scripts and
 plugins to use. By default this is the backslash key `\'. See |mapleader|
 for details.
 
+<LocalLeader><Space>
+        Normal or Insert - Continue editing after the ending tag. This
+        option requires xml_jump_string to be set to function. When a tag
+        is completed it will append the xml_jump_string. Once this mapping
+        is ran it will delete the next xml_jump_string pattern to the right
+        of the curser and delete it leaving you in insert mode to continue
+        editing.
+
+<LocalLeader>w
+        Normal - Will clear the entire file of left over xml_jump_string garbage.
+        * This will also happen automatically when you save the file. *
+
 <LocalLeader>x
-	Visual - Place a custom XML tag to suround the selected text. You
-	need to have selected text in visual mode before you can use this
-	mapping. See |visual-mode| for details.
+        Visual - Place a custom XML tag to suround the selected text. You
+        need to have selected text in visual mode before you can use this
+        mapping. See |visual-mode| for details.
 
 <LocalLeader>.   or      <LocalLeader>>
         Insert - Place a literal '>' without parsing tag.
@@ -738,43 +805,52 @@ for details.
 <
 
 ------------------------------------------------------------------------------
-							 *xml-plugin-settings*
+                                                         *xml-plugin-settings*
 Options {{{2 ~
 
 (All options must be placed in your |.vimrc| prior to the |ftplugin|
 command.)
 
 xml_tag_completion_map
-	Use this setting to change the default mapping to auto complete a
-	tag. By default typing a literal `>' will cause the tag your editing
-	to auto complete; pressing twice will auto nest the tag. By using
-	this setting the `>' will be a literal `>' and you must use the new
-	mapping to perform auto completion and auto nesting. For example if
-	you wanted Control-L to perform auto completion inmstead of typing a
-	`>' place the following into your .vimrc: >
+        Use this setting to change the default mapping to auto complete a
+        tag. By default typing a literal `>' will cause the tag your editing
+        to auto complete; pressing twice will auto nest the tag. By using
+        this setting the `>' will be a literal `>' and you must use the new
+        mapping to perform auto completion and auto nesting. For example if
+        you wanted Control-L to perform auto completion inmstead of typing a
+        `>' place the following into your .vimrc: >
             let xml_tag_completion_map = "<C-l>"
 <
 xml_no_auto_nesting
-	This turns off the auto nesting feature. After a completion is made
-	and another `>' is typed xml-edit automatically will break the tag
-	accross multiple lines and indent the curser to make creating nested
-	tqags easier. This feature turns it off. Enter the following in your
-	.vimrc: >
+        This turns off the auto nesting feature. After a completion is made
+        and another `>' is typed xml-edit automatically will break the tag
+        accross multiple lines and indent the curser to make creating nested
+        tqags easier. This feature turns it off. Enter the following in your
+        .vimrc: >
             let xml_no_auto_nesting = 1
 <
 xml_use_xhtml
-	When editing HTML this will auto close the short tags to make valid
-	XML like <hr /> and <br />. Enter the following in your vimrc to
-	turn this option on: >
+        When editing HTML this will auto close the short tags to make valid
+        XML like <hr /> and <br />. Enter the following in your vimrc to
+        turn this option on: >
             let xml_use_xhtml = 1
 <
 xml_no_html
-	This turns of the support for HTML specific tags. Place this in your
+        This turns off the support for HTML specific tags. Place this in your
         .vimrc: >
             let xml_no_html = 1
 <
+xml_jump_string
+        This turns off the support for continuing edits after an ending tag.
+        xml_jump_string can be any string how ever a simple character will
+        suffice. Pick a character or small string that is unique and will
+        not interfer with your normal editing. See the <LocalLeader>Space
+        mapping for more.
+        .vimrc: >
+            let xml_jump_string = "`"
+<
 ------------------------------------------------------------------------------
-							*xml-plugin-callbacks*
+                                                        *xml-plugin-callbacks*
 Callback Functions {{{2 ~
 
 A callback function is a function used to customize features on a per tag
@@ -794,13 +870,13 @@ plugin will ignore and continue as if no callback existed.
 The following are implemented callback functions:
 
 HtmlAttribCallback
-	This is used to add default attributes to html tag. It is intended
-	for HTML files only.
+        This is used to add default attributes to html tag. It is intended
+        for HTML files only.
 
 XmlAttribCallback
-	This is a generic callback for xml tags intended to add attributes.
+        This is a generic callback for xml tags intended to add attributes.
 
-							     *xml-plugin-html*
+                                                             *xml-plugin-html*
 Callback Example {{{2 ~
 
 The following is an example of using XmlAttribCallback in your .vimrc
@@ -847,9 +923,9 @@ The following is a sample html.vim file type plugin you could use:
           return "src=\"\" width=\"0\" height=\"0\" border=\"0\" alt=\"\""
       elseif a:xml_tag ==? "a"
           if has("browse")
-	      " Look up a file to fill the href. Used in local relative file
-	      " links. typeing your own href before closing the tag with `>'
-	      " will override this.
+              " Look up a file to fill the href. Used in local relative file
+              " links. typeing your own href before closing the tag with `>'
+              " will override this.
               let cwd = getcwd()
               let cwd = substitute (cwd, "\\", "/", "g")
               let href = browse (0, "Link to href...", getcwd(), "")
@@ -870,6 +946,5 @@ The following is a sample html.vim file type plugin you could use:
 <
 === END_DOC
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" v im:tw=78:ts=8:ft=help:norl:
-" vim600: set foldmethod=marker  tabstop=8 shiftwidth=2 softtabstop=2 smartindent smarttab  :
-"fileencoding=iso-8859-15 
+" vim: set tabstop=8 shiftwidth=4 softtabstop=4 smartindent
+" vim600: set foldmethod=marker smarttab fileencoding=iso-8859-15 
