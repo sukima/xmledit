@@ -69,16 +69,22 @@ function s:WrapTag(text)
     else
         let input_text = a:text
     endif
-    let wraptag = inputdialog('Tag to wrap "' . input_text . '" : ')
-    if strlen(wraptag)==0
-        if strlen(b:last_wrap_tag_used)==0
-            undo
-            return
-        endif
-        let wraptag = b:last_wrap_tag_used
-        let atts = b:last_wrap_atts_used
+    if exists("b:last_wrap_tag_used")
+        let default_tag = b:last_wrap_tag_used
     else
-        let atts = inputdialog('Attributes in <' . wraptag . '> : ')
+        let default_tag = ""
+    endif
+    let wraptag = inputdialog('Tag to wrap "' . input_text . '" : ', default_tag)
+    if strlen(wraptag)==0
+        undo
+        return
+    else
+        if wraptag == default_tag && exists("b:last_wrap_atts_used")
+            let default_atts = b:last_wrap_atts_used
+        else
+            let default_atts = ""
+        endif
+        let atts = inputdialog('Attributes in <' . wraptag . '> : ', default_atts)
     endif
     if (visualmode() ==# 'V')
         let text = strpart(a:text,0,strlen(a:text)-1)
