@@ -2,8 +2,8 @@
 " FileType:     XML
 " Author:       Devin Weaver <suki (at) tritarget.com> 
 " Maintainer:   Devin Weaver <suki (at) tritarget.com>
-" Last Change:  Tue Apr 07 11:12:08 EDT 2009
-" Version:      1.84
+" Last Change:  Fri Apr 10 17:47:11 EDT 2009
+" Version:      1.85
 " Location:     http://www.vim.org/scripts/script.php?script_id=301
 " Licence:      This program is free software; you can redistribute it
 "               and/or modify it under the terms of the GNU General Public
@@ -19,6 +19,8 @@
 "                 <Leader>x cancelation bug. 
 "               Martijn van der Kwast <mvdkwast@gmx.net> for patching
 "                 problems with multi-languages (XML and PHP).
+"               Ilya Bobir <ilya.bobir@gmail.com> for patching
+"                 xml_tag_syntax_pefixes option.
 
 " This script provides some convenience when editing XML (and some SGML)
 " formated documents.
@@ -489,7 +491,12 @@ function s:InsertGt( )
   if (getline('.')[col('.') - 1] == '>')
     let char_syn=synIDattr(synID(line("."), col(".") - 1, 1), "name")
   endif
-  if -1 == match(char_syn, "xmlProcessing") && (0 == match(char_syn, 'html') || 0 == match(char_syn, 'xml') || 0 == match(char_syn, 'docbk'))
+  if !exists("g:xml_tag_syntax_prefixes")
+    let tag_syn_patt = 'html\|xml\|docbk'
+  else
+    let tag_syn_patt = g:xml_tag_syntax_prefixes
+  endif
+  if -1 == match(char_syn, "xmlProcessing") && 0 == match(char_syn, tag_syn_patt)
     call <SID>ParseTag()
   else
     if col(".") == col("$") - 1
@@ -828,6 +835,17 @@ xml_tag_completion_map
         you wanted Control-L to perform auto completion inmstead of typing a
         `>' place the following into your .vimrc: >
             let xml_tag_completion_map = "<C-l>"
+<
+xml_tag_syntax_prefixes
+        Sets a pattern that is used to distinguish XML syntax elements that
+        identify xml tags.  By defult the value is 'html\|xml\|docbk'.  This
+        means that all syntax items that start with "html", "xml" or "docbk" are
+        treated as XML tags.  In case a completion is triggered after a syntax
+        element that does not match this pattern the end tag will not be inserted.
+        The pattern should match at the beginning of a syntax element name.
+        If you edit XSLT files you probably want to add "xsl" to the list (note
+        the signle quotes): >
+            let xml_tag_syntax_prefixes = 'html\|xml\|xsl\|docbk'
 <
 xml_no_auto_nesting
         This turns off the auto nesting feature. After a completion is made
