@@ -715,8 +715,8 @@ else
     execute "inoremap <buffer> " . g:xml_tag_completion_map . " <Esc>:call <SID>InsertGt()<Cr>"
 endif
 
-nnoremap <buffer> <LocalLeader><Space> :call <SID>EditFromJump()<Cr>
-inoremap <buffer> <LocalLeader><Space> <Esc>:call <SID>EditFromJump()<Cr>
+nnoremap <buffer> <LocalLeader><LocalLeader> :call <SID>EditFromJump()<Cr>
+inoremap <buffer> <LocalLeader><LocalLeader> <Esc>:call <SID>EditFromJump()<Cr>
 " Clear out all left over xml_jump_string garbage
 nnoremap <buffer> <LocalLeader>w :call <SID>ClearJumpMarks()<Cr>
 " The syntax files clear out any predefined syntax definitions. Recreate
