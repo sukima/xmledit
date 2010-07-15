@@ -21,6 +21,7 @@
 "                 problems with multi-languages (XML and PHP).
 "               Ilya Bobir <ilya.bobir@gmail.com> for patching
 "                 xml_tag_syntax_pefixes option.
+" GetLatestVimScripts: 301 1 :AutoInstall: xmledit.vba
 
 " This script provides some convenience when editing XML (and some SGML)
 " formated documents.
