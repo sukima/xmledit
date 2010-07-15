@@ -11,7 +11,8 @@ Licence
 -------
 This program is free software; you can redistribute it
 and/or modify it under the terms of the GNU General Public
-License.  See http://www.gnu.org/copyleft/gpl.txt
+License.  
+See <http://www.gnu.org/copyleft/gpl.txt>
 
 Build
 -----
@@ -47,7 +48,7 @@ bundle directory. This can easily be done by cloning the [git repository][1] or
 by making a [git submodule][2]. Do not attempt to use a .vba file with
 pathogen.
 
-    $ git clone https://sukima@github.com/sukima/xmledit.git ~/.vim/bundles/
+    $ git clone https://sukima@github.com/sukima/xmledit.git ~/.vim/bundle/
 
 Or as a submodule (assuming .vim is a git repository)
 
