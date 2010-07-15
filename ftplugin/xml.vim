@@ -3,24 +3,11 @@
 " Author:       Devin Weaver <suki (at) tritarget.com> 
 " Maintainer:   Devin Weaver <suki (at) tritarget.com>
 " Last Change:  Fri Apr 10 17:47:11 EDT 2009
-" Version:      1.85
+" Version:      1.9.0
 " Location:     http://www.vim.org/scripts/script.php?script_id=301
 " Licence:      This program is free software; you can redistribute it
 "               and/or modify it under the terms of the GNU General Public
 "               License.  See http://www.gnu.org/copyleft/gpl.txt
-" Credits:      Brad Phelan <bphelan (at) mathworks.co.uk> for completing
-"                 tag matching and visual tag completion.
-"               Ma, Xiangjiang <Xiangjiang.Ma (at) broadvision.com> for
-"                 pointing out VIM 6.0 map <buffer> feature.
-"               Luc Hermitte <hermitte (at) free.fr> for testing the self
-"                 install documentation code and providing good bug fixes.
-"               Guo-Peng Wen for the self install documentation code.
-"               Shawn Boles <ickybots (at) gmail.com> for fixing the
-"                 <Leader>x cancelation bug. 
-"               Martijn van der Kwast <mvdkwast@gmx.net> for patching
-"                 problems with multi-languages (XML and PHP).
-"               Ilya Bobir <ilya.bobir@gmail.com> for patching
-"                 xml_tag_syntax_pefixes option.
 " GetLatestVimScripts: 301 1 :AutoInstall: xmledit.vba
 
 " This script provides some convenience when editing XML (and some SGML)
@@ -32,9 +19,7 @@
 " Documentation should be available by ":help xml-plugin" command, once the
 " script has been copied in you .vim/plugin directory.
 "
-" You still can read the documentation at the end of this file. Locate it by
-" searching the "xml-plugin" string (and set ft=help to have
-" appropriate syntaxic coloration). 
+" You still can read the documentation in the file "doc/xml-plugin.txt"
 
 " Note: If you used the 5.x version of this file (xmledit.vim) you'll need to
 " comment out the section where you called it since it is no longer used in

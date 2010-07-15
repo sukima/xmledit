@@ -1,0 +1,80 @@
+xml-plugin
+==========
+Maintainer: Devin Weaver <suki@tritarget.org>  
+Source: <http://github.com/sukima/xmledit>  
+Homepage: <http://www.vim.org/scripts/script.php?script_id=301>
+
+XML Edit is a file type plugin to help edit XML documents.
+It includes tag completion and tag jumping.
+
+Licence
+-------
+This program is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public
+License.  See http://www.gnu.org/copyleft/gpl.txt
+
+Build
+-----
+Run the Makefile to build the vba file.
+
+    $ make
+
+Now send it to all your friends.
+
+Install
+-------
+This is for users who have the xmledit.vba file.
+
+If you do not have VIM version 7.0 or higher this will not work. Either upgrade
+or deal with the shaddy old plugin which you can get at
+<http://github.com/sukima/xmledit/tree/v1.84>.
+
+To install the created package open the vba file in vim and source it:
+
+    $ vim xmledit.vba
+    :so %
+
+If you are installing this from the source (you don't have a .vba file) you can
+skip the building of one by running the Makefile:
+
+    $ make install
+
+Now read doc/xml-plugin.txt or type `:help xml-plugin.txt` in VIM.
+
+** NOTE for pathogen users **  
+You do not need to install via any means other then to place the source in the
+bundle directory. This can easily be done by cloning the [git repository][1] or
+by making a [git submodule][2]. Do not attempt to use a .vba file with
+pathogen.
+
+    $ git clone https://sukima@github.com/sukima/xmledit.git ~/.vim/bundles/
+
+Or as a submodule (assuming .vim is a git repository)
+
+    $ cd ~/.vim
+    $ git submodule init
+    $ git submodule add https://sukima@github.com/sukima/xmledit.git bundle/
+    $ git submodule update
+
+Credits
+-------
+* Brad Phelan <bphelan@mathworks.co.uk>
+  for completing tag matching and visual tag completion.
+* Ma, Xiangjiang <Xiangjiang.Ma@broadvision.com> for
+  pointing out VIM 6.0 map `<buffer>` feature.
+* Luc Hermitte <hermitte@free.fr> for testing the self
+  install documentation code and providing good bug fixes.
+* Guo-Peng Wen for the self install documentation code.
+* Shawn Boles <ickybots@gmail.com> for fixing the
+  `<Leader>x` cancelation bug. 
+* Martijn van der Kwast <mvdkwast@gmx.net> for patching
+  problems with multi-languages (XML and PHP).
+* Ilya Bobir <ilya.bobir@gmail.com> for patching
+  `xml_tag_syntax_pefixes` option.
+* Eli L. <eli@siliconsprawl.com> for converting to the
+  vimball packaging format.
+
+[1]: http://github.com/sukima/xmledit
+[2]: http://www.kernel.org/pub/software/scm/git/docs/git-submodule.html
+
+<!-- vim:set ai et ts=8 sw=4: -->
