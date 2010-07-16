@@ -175,7 +175,7 @@ function s:ParseTag( )
 
     if <SID>IsParsableTag (ltag)
         " find the break between tag name and atributes (or closing of tag)
-        let index = matchend (ltag, '[[:alnum:]_:\-]\+')
+        let index = matchend (ltag, '[[:alnum:]_:\.\-]\+')
 
         let tag_name = strpart (ltag, 1, index - 1)
         if strpart (ltag, index) =~ '[^/>[:blank:]]'
