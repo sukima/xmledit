@@ -2,8 +2,8 @@
 " FileType:     XML
 " Author:       Devin Weaver <suki (at) tritarget.com> 
 " Maintainer:   Devin Weaver <suki (at) tritarget.com>
-" Last Change:  Fri Apr 10 17:47:11 EDT 2009
-" Version:      1.9.0
+" Last Change:  Thu Jul 22 16:06:01 EDT 2010
+" Version:      1.9.1
 " Location:     http://www.vim.org/scripts/script.php?script_id=301
 " Licence:      This program is free software; you can redistribute it
 "               and/or modify it under the terms of the GNU General Public
@@ -32,7 +32,7 @@
 "==============================================================================
 
 " Only do this when not done yet for this buffer
-if exists("b:did_ftplugin")
+if exists("b:did_ftplugin") || exists("loaded_xmledit")
   finish
 endif
 " sboles, init these variables so vim doesn't complain on wrap cancel
