@@ -31,6 +31,11 @@ NOTE: If you used the VIM 5.x version of this file (xmledit.vim) you'll need
 to comment out the section where you called it. It is no longer used in the
 VIM 6.x version. 
 
+To disable the plugin (especially for systems that include this plugin as part
+of the distrobution) you can use the following line in your .vimrc:
+>
+    let loaded_xmledit = 1
+<
 Known Bugs 
 
 - This script will modify registers ". and "x; register "" will be restored.

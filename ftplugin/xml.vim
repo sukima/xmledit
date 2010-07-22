@@ -32,7 +32,7 @@
 "==============================================================================
 
 " Only do this when not done yet for this buffer
-if exists("b:did_ftplugin")
+if exists("b:did_ftplugin") || exists("loaded_xmledit")
   finish
 endif
 " sboles, init these variables so vim doesn't complain on wrap cancel
