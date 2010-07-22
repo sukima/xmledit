@@ -28,7 +28,9 @@ This is for users who have the xmledit.vba file.
 
 If you do not have VIM version 7.0 or higher this will not work. Either upgrade
 or deal with the shaddy old plugin which you can get at
-<http://github.com/sukima/xmledit/tree/v1.84>.
+<http://github.com/sukima/xmledit/tree/v1.84>. (Alternativly you could manually
+copy the files to there proper locations however older versions of VIM will not
+be supported in future development)
 
 To install the created package open the vba file in vim and source it:
 
