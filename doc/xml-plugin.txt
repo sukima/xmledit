@@ -4,7 +4,7 @@
 
 A filetype plugin to help edit XML and SGML documents.
 
-Version: 1.9.1
+Version: 1.9.2
 
 This script provides some convenience when editing XML (and some SGML
 including HTML) formated documents. It allows you to jump to the beginning
@@ -145,6 +145,33 @@ xml_jump_string
         .vimrc: >
             let xml_jump_string = "`"
 <
+------------------------------------------------------------------------------
+Using With Other File Types                             *xml-plugin-filetypes*
+
+This can be used with other file types besides XML. There are two ways to
+accomplish this. The plugin can be used as is for other languages or with extra
+features that are language specific via the callback method.
+See |xml-plugin-callbacks| for more info.
+
+The first method is simply to copy xml.vim or symbolically (or hard) link it
+to the new file type. For example:
+>
+    ftplugin/
+    |-xml.vim
+    |-php.vim -> xml.vim
+    `-xhtml.vim -> xml.vim
+<
+The second method expands on the idea of copying. It uses a callback method
+which can extend the functionality of the tags for that language. For example
+in an HTML document you might prefer your table tags to look like this:
+>
+    <table cellpadding="0" cellspacing="0" border="0">
+    </table>
+<
+But by just linking html.vim to xml.vim you would have to type all that in
+every time. The callback could allow you to type just <table> and it would add
+the attributes for you. The example in |xml-plugin-html| shows how to do this
+with HTML files.
 ------------------------------------------------------------------------------
                                                         *xml-plugin-callbacks*
 Callback Functions 
