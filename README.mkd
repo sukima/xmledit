@@ -3,7 +3,7 @@ xml-plugin
 Maintainer: Devin Weaver <suki@tritarget.org>  
 Source: <http://github.com/sukima/xmledit>  
 Homepage: <http://www.vim.org/scripts/script.php?script_id=301>  
-Version: 1.9.2
+Version: 1.9.3
 
 XML Edit is a file type plugin to help edit XML documents.
 It includes tag completion and tag jumping.
@@ -51,7 +51,7 @@ bundle directory. This can easily be done by cloning the [git repository][1] or
 by making a [git submodule][2]. Do not attempt to use a .vba file with
 pathogen.
 
-    $ git clone https://sukima@github.com/sukima/xmledit.git ~/.vim/bundle/
+    $ git clone https://github.com/sukima/xmledit.git ~/.vim/bundle/
 
 Or as a submodule (assuming .vim is a git repository)
 
