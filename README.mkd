@@ -57,7 +57,7 @@ Or as a submodule (assuming .vim is a git repository)
 
     $ cd ~/.vim
     $ git submodule init
-    $ git submodule add https://sukima@github.com/sukima/xmledit.git bundle/
+    $ git submodule add https://github.com/sukima/xmledit.git bundle/
     $ git submodule update
 
 Using With Other File Types
