@@ -1,1 +1,1 @@
-ftplugin/xml.vim
+xml.vim
