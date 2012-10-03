@@ -536,6 +536,23 @@ function s:EditFromJump( )
 endfunction
 endif
 
+" Gets the current HTML tag by the cursor.
+if !exists("*s:GetCurrentTag")
+	function s:GetCurrentTag()
+		return matchstr(matchstr(getline('.'),
+		\ '<\zs\(\w\|=\| \|''\|"\)*>\%'.col('.').'c'), '^\a*')
+	endfunction
+endif
+
+" Cleanly return after autocompleting an html/xml tag.
+if !exists("*s:MoveCursor")
+	function s:MoveCursor()
+		let tag = s:GetCurrentTag()
+		return tag != '' && match(getline('.'), '</'.tag.'>') > -1 ?
+		\ "\<cr>\<cr>\<up>" : "\<cr>"
+	endfunction
+endif
+
 " Mappings and Settings.                                             {{{1
 " This makes the '%' jump between the start and end of a single tag.
 setlocal matchpairs+=<:>
@@ -562,6 +579,9 @@ nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
 if !exists("g:xml_tag_completion_map")
     " inoremap <buffer> > ><Esc>:call <SID>ParseTag()<Cr>
     inoremap <buffer> > <Esc>:call <SID>InsertGt()<Cr>
+	" After the closing tag has been added and we press enter, this inserts 2
+	" linebreaks and moves our cursor up 1 line.
+	inoremap <buffer> <expr> <cr> <SID>MoveCursor()
 else
     execute "inoremap <buffer> " . g:xml_tag_completion_map . " <Esc>:call <SID>InsertGt()<Cr>"
 endif
