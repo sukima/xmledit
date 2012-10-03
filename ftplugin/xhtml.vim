@@ -1,0 +1,1 @@
+ftplugin/xml.vim
