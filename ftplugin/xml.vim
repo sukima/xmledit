@@ -2,9 +2,9 @@
 " FileType:     XML
 " Author:       Devin Weaver <suki (at) tritarget.com> 
 " Maintainer:   Devin Weaver <suki (at) tritarget.com>
-" Last Change:  Fri Sep 17 08:00:13 EDT 2010
-" Version:      1.9.4
+" Version:      1.10.0
 " Location:     http://www.vim.org/scripts/script.php?script_id=301
+" Source:       https://github.com/sukima/xmledit
 " Licence:      This program is free software; you can redistribute it
 "               and/or modify it under the terms of the GNU General Public
 "               License.  See http://www.gnu.org/copyleft/gpl.txt
