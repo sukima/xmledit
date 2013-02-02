@@ -581,7 +581,7 @@ if !exists("g:xml_tag_completion_map")
     inoremap <buffer> > <Esc>:call <SID>InsertGt()<Cr>
 	" After the closing tag has been added and we press enter, this inserts 2
 	" linebreaks and moves our cursor up 1 line.
-	inoremap <buffer> <expr> <cr> <SID>MoveCursor()
+	inoremap <buffer> <expr> <Cr> <Esc>:call <SID>MoveCursor()<Cr>
 else
     execute "inoremap <buffer> " . g:xml_tag_completion_map . " <Esc>:call <SID>InsertGt()<Cr>"
 endif
