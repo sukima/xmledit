@@ -6,15 +6,29 @@ describe "Vim plugin xml-edit" do
   let(:vim) { VIM }
 
   around :each do |example|
-    vim.add_plugin(File.expand_path('../ftplugin'), 'xml.vim')
+    plugin_path = File.expand_path('../ftplugin')
+    vim.add_plugin plugin_path, "xml.vim"
     tmpdir(vim) do
       example.call
     end
   end
 
-  describe "test" do
-    it "should pass" do
-      "foo".should eq "foo"
+  it "should define last_wrap_tag_used" do
+    vim.command("echo exists('b:last_wrap_tag_used')").should eq "1"
+  end
+  it "should define last_wrap_atts_used" do
+    vim.command("echo exists('b:last_wrap_atts_used')").should eq "1"
+  end
+
+  describe "#WrapTag" do
+    before do
+      write_file("test.xml", "foobar")
     end
+    # it "should pass" do
+    #   vim.edit "test.xml"
+    #   vim.type "\\F"
+    #   vim.write
+    #   IO.read("test.xml").should eq "<testtag testattr>foobar</testtag>"
+    # end
   end
 end
