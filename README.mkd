@@ -86,6 +86,14 @@ every time. The callback could allow you to type just `<table>` and it would
 add the ` cellpadding=...` attributes for you. The example in the documentation
 (`:help xml-plugin-callbacks`) shows how to do this with HTML files.
 
+Caveats
+-------
+There are conflicts with the [AutoComplPop][3] script. If you get errors, add
+the following to your `.vimrc` as suggested by @othree in [issue #15][4]:
+
+    autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags noci
+    autocmd FileType html set omnifunc=htmlcomplete#CompleteTags noci
+
 Credits
 -------
 * Brad Phelan <bphelan@mathworks.co.uk>
@@ -106,5 +114,7 @@ Credits
 
 [1]: http://github.com/sukima/xmledit
 [2]: http://www.kernel.org/pub/software/scm/git/docs/git-submodule.html
+[3]: http://www.vim.org/scripts/script.php?script_id=1879
+[4]: https://github.com/sukima/xmledit/issues/15
 
 <!-- vim:set ai et ts=8 sw=4: -->
