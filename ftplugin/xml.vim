@@ -562,6 +562,9 @@ setlocal commentstring=<!--%s-->
 if !exists("g:xml_tag_completion_map")
     inoremap <buffer> <LocalLeader>. >
     inoremap <buffer> <LocalLeader>> >
+else
+    execute "inoremap <buffer> <LocalLeader>. " . g:xml_tag_completion_map
+    execute "inoremap <buffer> <LocalLeader>> " . g:xml_tag_completion_map
 endif
 
 " Jump between the beggining and end tags.
