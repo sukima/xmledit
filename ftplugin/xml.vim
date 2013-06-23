@@ -161,6 +161,7 @@ function s:ParseTag( )
     else
         let multi_line = 0
     endif
+    let do_append_for_xhtml = 0
 
     let @" = ""
     execute "normal! \"xy%%"
@@ -196,6 +197,9 @@ function s:ParseTag( )
             endif
             if exists ("g:xml_use_xhtml")
                 execute "normal! i /\<Esc>l"
+                if col(".") == col("$") - 1
+                  let do_append_for_xhtml = 1
+                endif
             endif
         else
             if multi_line
@@ -225,7 +229,7 @@ function s:ParseTag( )
     let @" = old_reg_save
     let @x = old_save_x
 
-    if multi_line
+    if multi_line || do_append_for_xhtml
         startinsert!
     else
         execute "normal! l"
