@@ -5,6 +5,8 @@ Source: <http://github.com/sukima/xmledit>
 Homepage: <http://www.vim.org/scripts/script.php?script_id=301>  
 Version: 1.10.3
 
+[![Build Status](https://travis-ci.org/sukima/xmledit.png?branch=master)](https://travis-ci.org/sukima/xmledit)
+
 XML Edit is a file type plugin to help edit XML documents.
 It includes tag completion and tag jumping.
 
