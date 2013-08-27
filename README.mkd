@@ -23,6 +23,17 @@ Run the Makefile to build the vba file.
 
 Now send it to all your friends.
 
+Testing
+-------
+The test environment is in the `tests` directory. It uses RSpec and
+[vimrunner](https://github.com/AndrewRadev/vimrunner). Execute the test suite:
+
+    $ bundle install
+    $ rake
+
+More information about testing in vim can be found at
+[this blog post](http://mudge.name/2012/04/18/testing-vim-plugins-on-travis-ci-with-rspec-and-vimrunner.html).
+
 Install
 -------
 This is for users who have the xmledit.vba file.
