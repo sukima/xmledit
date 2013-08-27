@@ -1,8 +1,8 @@
 " Vim script file                                           vim600:fdm=marker:
 " FileType:     XML
-" Author:       Devin Weaver <suki (at) tritarget.com> 
+" Author:       Devin Weaver <suki (at) tritarget.com>
 " Maintainer:   Devin Weaver <suki (at) tritarget.com>
-" Version:      1.10.0
+" Version:      1.10.3
 " Location:     http://www.vim.org/scripts/script.php?script_id=301
 " Source:       https://github.com/sukima/xmledit
 " Licence:      This program is free software; you can redistribute it
@@ -13,7 +13,7 @@
 " This script provides some convenience when editing XML (and some SGML)
 " formated documents.
 
-" Section: Documentation 
+" Section: Documentation
 " ----------------------
 "
 " Documentation should be available by ":help xml-plugin" command, once the
@@ -23,7 +23,7 @@
 
 " Note: If you used the 5.x version of this file (xmledit.vim) you'll need to
 " comment out the section where you called it since it is no longer used in
-" version 6.x. 
+" version 6.x.
 
 " TODO: Revamp ParseTag to pull appart a tag a rebuild it properly.
 " a tag like: <  test  nowrap  testatt=foo   >
@@ -41,9 +41,9 @@ let b:last_wrap_atts_used = ""
 
 " WrapTag -> Places an XML tag around a visual selection.            {{{1
 " Brad Phelan: Wrap the argument in an XML tag
-" Added nice GUI support to the dialogs. 
+" Added nice GUI support to the dialogs.
 " Rewrote function to implement new algorythem that addresses several bugs.
-if !exists("*s:WrapTag") 
+if !exists("*s:WrapTag")
 function s:WrapTag(text)
     if (line(".") < line("'<"))
         let insert_cmd = "o"
@@ -119,7 +119,7 @@ function s:Callback( xml_tag, isHtml )
         let text = HtmlAttribCallback (a:xml_tag)
     elseif exists ("*XmlAttribCallback")
         let text = XmlAttribCallback (a:xml_tag)
-    endif       
+    endif
     if text != '0'
         execute "normal! i " . text ."\<Esc>l"
     endif
@@ -142,7 +142,7 @@ function s:IsParsableTag( tag )
     if strpart (a:tag, strlen (a:tag) - 2, 1) == '/'
         let parse = 0
     endif
-    
+
     return parse
 endfunction
 endif
@@ -255,7 +255,7 @@ function s:BuildTagName( )
   "forwards command will jump to the next tag otherwise
 
   " Store contents of register x in a variable
-  let b:xreg = @x 
+  let b:xreg = @x
 
   exec "normal! v\"xy"
   if @x=='>'
@@ -287,7 +287,7 @@ function s:BuildTagName( )
 endfunction
 endif
 
-" TagMatch1 -> First step in tag matching.                           {{{1 
+" TagMatch1 -> First step in tag matching.                           {{{1
 " Brad Phelan: First step in tag matching.
 if !exists("*s:TagMatch1")
 function s:TagMatch1()
@@ -304,13 +304,13 @@ function s:TagMatch1()
   if match(b:xreg, '^/')==-1
     let endtag = 0
   else
-    let endtag = 1  
+    let endtag = 1
   endif
 
  " Extract the tag from the whole tag block
  " eg if the block =
  "   tag attrib1=blah attrib2=blah
- " we will end up with 
+ " we will end up with
  "   tag
  " with no trailing or leading spaces
  let b:xreg=substitute(b:xreg,'^/','','g')
@@ -318,7 +318,7 @@ function s:TagMatch1()
  " Make sure the tag is valid.
  " Malformed tags could be <?xml ?>, <![CDATA[]]>, etc.
  if match(b:xreg,'^[[:alnum:]_:\-]') != -1
-     " Pass the tag to the matching 
+     " Pass the tag to the matching
      " routine
      call <SID>TagMatch2(b:xreg, endtag)
  endif
@@ -347,7 +347,7 @@ function s:TagMatch2(tag,endtag)
   endif
 
   if a:endtag==0
-     let stk = 1 
+     let stk = 1
   else
      let stk = 1
   end
@@ -358,7 +358,7 @@ function s:TagMatch2(tag,endtag)
  let wrapval = &wrapscan
  let &wrapscan = 1
 
-  "Get the current location of the cursor so we can 
+  "Get the current location of the cursor so we can
   "detect if we wrap on ourselves
   let lpos = line(".")
   let cpos = col(".")
@@ -373,8 +373,8 @@ function s:TagMatch2(tag,endtag)
       let iter = -1
   endif
 
-  "Loop until stk == 0. 
-  while 1 
+  "Loop until stk == 0.
+  while 1
      " exec search.
      " Make sure to avoid />$/ as well as /\s$/ and /$/.
      exec "normal! " . match_type . '<\s*\/*\s*' . a:tag . '\([[:blank:]>]\|$\)' . "\<Cr>"
@@ -402,7 +402,7 @@ function s:TagMatch2(tag,endtag)
 
      if match(b:xreg,'^/')==-1
         " Found start tag
-        let stk = stk + iter 
+        let stk = stk + iter
      else
         " Found end tag
         let stk = stk - iter
@@ -410,7 +410,7 @@ function s:TagMatch2(tag,endtag)
 
      if stk == 0
         break
-     endif    
+     endif
   endwhile
 
   let &wrapscan = wrapval
@@ -451,7 +451,7 @@ endif
 " VisualTag -> Selects Tag body in a visual selection.                {{{1
 " Modifies mark z
 if !exists("*s:VisualTag")
-function s:VisualTag( ) 
+function s:VisualTag( )
     if strpart (getline ("."), col (".") - 1, 1) == "<"
         normal! l
     endif
@@ -465,7 +465,7 @@ function s:VisualTag( )
     normal! `z
 endfunction
 endif
- 
+
 " InsertGt -> close tags only if the cursor is in a HTML or XML context {{{1
 " Else continue editing
 if !exists("*s:InsertGt")
@@ -491,7 +491,7 @@ function s:InsertGt( )
   else
     if col(".") == col("$") - 1
       startinsert!
-    else 
+    else
       execute "normal! l"
       startinsert
     endif
@@ -552,8 +552,7 @@ endif
 if !exists("*s:MoveCursor")
 	function s:MoveCursor()
 		let tag = s:GetCurrentTag()
-		return tag != '' && match(getline('.'), '</'.tag.'>') > -1 ?
-		\ "\<cr>\<cr>\<up>" : "\<cr>"
+		return (tag != '') && (match(getline('.'), '</'.tag.'>') > -1) ? "\<cr>\<cr>\<up>" : "\<cr>"
 	endfunction
 endif
 
@@ -567,6 +566,9 @@ setlocal commentstring=<!--%s-->
 if !exists("g:xml_tag_completion_map")
     inoremap <buffer> <LocalLeader>. >
     inoremap <buffer> <LocalLeader>> >
+else
+    execute "inoremap <buffer> <LocalLeader>. " . g:xml_tag_completion_map
+    execute "inoremap <buffer> <LocalLeader>> " . g:xml_tag_completion_map
 endif
 
 " Jump between the beggining and end tags.
@@ -583,9 +585,9 @@ nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
 if !exists("g:xml_tag_completion_map")
     " inoremap <buffer> > ><Esc>:call <SID>ParseTag()<Cr>
     inoremap <buffer> > <Esc>:call <SID>InsertGt()<Cr>
-	" After the closing tag has been added and we press enter, this inserts 2
-	" linebreaks and moves our cursor up 1 line.
-	inoremap <buffer> <expr> <cr> <SID>MoveCursor()
+    " After the closing tag has been added and we press enter, this inserts 2
+    " linebreaks and moves our cursor up 1 line.
+    execute "inoremap <buffer> <expr> <cr> \"" . <SID>MoveCursor() . "\""
 else
     execute "inoremap <buffer> " . g:xml_tag_completion_map . " <Esc>:call <SID>InsertGt()<Cr>"
 endif
