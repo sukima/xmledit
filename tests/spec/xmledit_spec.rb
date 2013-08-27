@@ -5,14 +5,6 @@ describe "Vim plugin xml-edit" do
   include Vimrunner::Testing
   let(:vim) { VIM }
 
-  around :each do |example|
-    plugin_path = File.expand_path('../ftplugin')
-    vim.add_plugin plugin_path, "xml.vim"
-    tmpdir(vim) do
-      example.call
-    end
-  end
-
   it "should define last_wrap_tag_used" do
     vim.command("echo exists('b:last_wrap_tag_used')").should eq "1"
   end
