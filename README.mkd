@@ -105,6 +105,23 @@ the following to your `.vimrc` as suggested by @othree in [issue #15][4]:
     autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags noci
     autocmd FileType html set omnifunc=htmlcomplete#CompleteTags noci
 
+How to contribute
+-----------------
+
+Contributions are through [Github][1] or via patches. I invite anyone
+interested to feel free to modify to your hearts content. If your modifications
+would be useful to others please send me a Pull Request.
+
+I handle maintinance in the following priority:
+
+1. Pull Requests and patches will be looked at in a much high priority then
+   anything else. I <3 pull requests.
+2. Issue reports are taken for reference but I don't do much with them hoping
+   instead for a pull request or patch.
+
+I am in need of unit tests. Anyone interested in helping please fork and add to
+the `tests/spec/` directory.
+
 Credits
 -------
 * Brad Phelan <bphelan@mathworks.co.uk>
