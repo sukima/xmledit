@@ -39,6 +39,14 @@ endif
 let b:last_wrap_tag_used = ""
 let b:last_wrap_atts_used = ""
 
+" Strlen -> A strlen function with multi-byte support                {{{1
+" Luc Hermitte: Suggested this trickery.
+if !exists("*s:Strlen")
+function s:Strlen(text)
+  return strlen(substitute(a:text, '.', 'a', 'g'))
+endfunction
+endif
+
 " WrapTag -> Places an XML tag around a visual selection.            {{{1
 " Brad Phelan: Wrap the argument in an XML tag
 " Added nice GUI support to the dialogs.
@@ -52,7 +60,7 @@ function s:WrapTag(text)
     else
         let insert_cmd = "i"
     endif
-    if strlen(a:text) > 10
+    if <SID>Strlen(a:text) > 10
         let input_text = strpart(a:text, 0, 10) . '...'
     else
         let input_text = a:text
@@ -63,7 +71,7 @@ function s:WrapTag(text)
         let default_tag = ""
     endif
     let wraptag = inputdialog('Tag to wrap "' . input_text . '" : ', default_tag)
-    if strlen(wraptag)==0
+    if <SID>Strlen(wraptag)==0
         undo
         return
     else
@@ -75,7 +83,7 @@ function s:WrapTag(text)
         let atts = inputdialog('Attributes in <' . wraptag . '> : ', default_atts)
     endif
     if (visualmode() ==# 'V')
-        let text = strpart(a:text,0,strlen(a:text)-1)
+        let text = strpart(a:text,0,<SID>Strlen(a:text)-1)
         if (insert_cmd ==# "o")
             let eol_cmd = ""
         else
@@ -85,7 +93,7 @@ function s:WrapTag(text)
         let text = a:text
         let eol_cmd = ""
     endif
-    if strlen(atts)==0
+    if <SID>Strlen(atts)==0
         let text = "<".wraptag.">".text."</".wraptag.">"
         let b:last_wrap_tag_used = wraptag
         let b:last_wrap_atts_used = ""
@@ -139,7 +147,7 @@ function s:IsParsableTag( tag )
     endif
 
     " make sure this tag isn't already closed.
-    if strpart (a:tag, strlen (a:tag) - 2, 1) == '/'
+    if strpart (a:tag, <SID>Strlen (a:tag) - 2, 1) == '/'
         let parse = 0
     endif
 
@@ -214,7 +222,7 @@ function s:ParseTag( )
                     call <SID>Callback (tag_name, html_mode)
                 endif
                 if exists("g:xml_jump_string")
-                    let index = index + strlen(g:xml_jump_string)
+                    let index = index + <SID>Strlen(g:xml_jump_string)
                     let jump_char = g:xml_jump_string
                     call <SID>InitEditFromJump()
                 else
@@ -525,7 +533,7 @@ function s:EditFromJump( )
     if exists("g:xml_jump_string")
         if g:xml_jump_string != ""
             let foo = search(g:xml_jump_string, 'csW') " Moves cursor by default
-            execute "normal! " . strlen(g:xml_jump_string) . "x"
+            execute "normal! " . <SID>Strlen(g:xml_jump_string) . "x"
             if col(".") == col("$") - 1
                 startinsert!
             else
