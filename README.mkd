@@ -3,7 +3,7 @@ xml-plugin
 Maintainer: Devin Weaver <suki@tritarget.org>  
 Source: <http://github.com/sukima/xmledit>  
 Homepage: <http://www.vim.org/scripts/script.php?script_id=301>  
-Version: 1.10.3
+Version: 1.10.4
 
 [![Build Status](https://travis-ci.org/sukima/xmledit.png?branch=master)](https://travis-ci.org/sukima/xmledit)
 
