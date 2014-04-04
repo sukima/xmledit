@@ -32,9 +32,12 @@
 "==============================================================================
 
 " Only do this when not done yet for this buffer
-if exists("b:did_ftplugin") || exists("loaded_xmledit")
+if exists("b:did_xmledit_ftplugin") || exists("loaded_xmledit")
   finish
 endif
+
+let b:did_xmledit_ftplugin = 1
+
 " sboles, init these variables so vim doesn't complain on wrap cancel
 let b:last_wrap_tag_used = ""
 let b:last_wrap_atts_used = ""
