@@ -15,16 +15,16 @@ complete the tag and place the cursor in the middle of the tags on it's own
 line (helps with nested tags).
 
 Usage: Place this file into your ftplugin directory. To add html support
-Sym-link or copy this file to html.vim in your ftplugin directory. To activte
+Sym-link or copy this file to html.vim in your ftplugin directory. To activate
 the script place 'filetype plugin on' in your |.vimrc| file. See |ftplugins|
 for more information on this topic.
 
-If the file edited is of type "html" and "xml_use_html" is  defined then the
+If the file edited is of type "html" and "xml_use_html" is defined then the
 following tags will not auto complete:
 <img>, <input>, <param>, <frame>, <br>, <hr>, <meta>, <link>, <base>, <area>
 
 If the file edited is of type 'html' and 'xml_use_xhtml' is defined the above
-tags will autocomplete the xml closing staying xhtml compatable.
+tags will autocomplete the xml closing staying xhtml compatible.
 ex. <hr> becomes <hr /> (see |xml-plugin-settings|)
 
 NOTE: If you used the VIM 5.x version of this file (xmledit.vim) you'll need
@@ -43,7 +43,7 @@ Known Bugs
   even if unmatched.
 - Although the script can handle leading spaces such as < tag></ tag> it is
   illegal XML syntax and considered very bad form.
-- Placing a literal `>' in an attribute value will auto complete dispite that
+- Placing a literal `>' in an attribute value will auto complete despite that
   the start tag isn't finished. This is poor XML anyway you should use
   &gt; instead.
 - The matching algorithm can handle illegal tag characters where as the tag
@@ -78,7 +78,7 @@ for details.
         Insert - Place a literal '>' without parsing tag.
 
 <LocalLeader>5   or      <LocalLeader>%
-        Normal or Visual - Jump to the begining or end tag.
+        Normal or Visual - Jump to the beginning or end tag.
 
 <LocalLeader>d
         Normal - Deletes the surrounding tags from the cursor. >
@@ -102,19 +102,19 @@ xml_tag_completion_map
         to auto complete; pressing twice will auto nest the tag. By using
         this setting the `>' will be a literal `>' and you must use the new
         mapping to perform auto completion and auto nesting. For example if
-        you wanted Control-L to perform auto completion inmstead of typing a
+        you wanted Control-L to perform auto completion instead of typing a
         `>' place the following into your .vimrc: >
             let xml_tag_completion_map = "<C-l>"
 <
 xml_tag_syntax_prefixes
         Sets a pattern that is used to distinguish XML syntax elements that
-        identify xml tags.  By defult the value is 'html\|xml\|docbk'.  This
+        identify xml tags.  By default the value is 'html\|xml\|docbk'.  This
         means that all syntax items that start with "html", "xml" or "docbk" are
         treated as XML tags.  In case a completion is triggered after a syntax
         element that does not match this pattern the end tag will not be inserted.
         The pattern should match at the beginning of a syntax element name.
         If you edit XSLT files you probably want to add "xsl" to the list (note
-        the signle quotes): >
+        the single quotes): >
             let xml_tag_syntax_prefixes = 'html\|xml\|xsl\|docbk'
 <
 xml_no_auto_nesting
@@ -177,7 +177,7 @@ with HTML files.
 Callback Functions 
 
 A callback function is a function used to customize features on a per tag
-basis. For example say you wish to have a default set of attributs when you
+basis. For example say you wish to have a default set of attributes when you
 type an empty tag like this:
     You type: <tag>
     You get:  <tag default="attributes"></tag>
@@ -185,7 +185,7 @@ type an empty tag like this:
 This is for any script programmers who wish to add xml-plugin support to
 there own filetype plugins.
 
-Callback functions recive one attribute variable which is the tag name. The
+Callback functions receive one attribute variable which is the tag name. The
 all must return either a string or the number zero. If it returns a string
 the plugin will place the string in the proper location. If it is a zero the
 plugin will ignore and continue as if no callback existed.
@@ -226,7 +226,7 @@ The following is a sample html.vim file type plugin you could use:
   if exists("b:did_ftplugin")
     finish
   endif
-  " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
+  " Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsibility.
 
   let b:html_mode = 1
 
