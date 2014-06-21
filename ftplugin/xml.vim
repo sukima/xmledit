@@ -451,7 +451,7 @@ function s:DeleteTag( )
         return
     endif
     normal! mz
-    normal \5
+    call s:TagMatch1()
     normal! d%`zd%
 endfunction
 endif
@@ -467,7 +467,7 @@ function s:VisualTag( )
         return
     endif
     normal! mz
-    normal \5
+    call s:TagMatch1()
     normal! %
     exe "normal! " . visualmode()
     normal! `z
