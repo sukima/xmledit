@@ -17,28 +17,15 @@ and/or modify it under the terms of the GNU General Public
 License.  
 See <http://www.gnu.org/copyleft/gpl.txt>
 
-Build
------
-Run the Makefile to build the vba file.
-
-    $ make
-
-Now send it to all your friends.
-
-Testing
--------
-The test environment is in the `tests` directory. It uses RSpec and
-[vimrunner](https://github.com/AndrewRadev/vimrunner). Execute the test suite:
-
-    $ bundle install
-    $ rake
-
-More information about testing in vim can be found at
-[this blog post](http://mudge.name/2012/04/18/testing-vim-plugins-on-travis-ci-with-rspec-and-vimrunner.html).
-
 Install
 -------
-This is for users who have the xmledit.vba file.
+
+xmledit can be installed using a `xmledit.vba` file or using Pathogen.
+
+### Installation using `xmledit.vba`
+
+First you need a `xmledit.vba` vimball. You can create one following the
+instruction in the [Build](#build) section.
 
 If you do not have VIM version 7.0 or higher this will not work. Either upgrade
 or deal with the shaddy old plugin which you can get at
@@ -58,20 +45,36 @@ skip the building of one by running the Makefile:
 
 Now read doc/xml-plugin.txt or type `:help xml-plugin.txt` in VIM.
 
-** NOTE for pathogen users **  
-You do not need to install via any means other then to place the source in the
-bundle directory. This can easily be done by cloning the [git repository][1] or
-by making a [git submodule][2]. Do not attempt to use a .vba file with
-pathogen.
+### Installation for Pathogen
 
-    $ git clone https://github.com/sukima/xmledit.git ~/.vim/bundle/
+To use xmledit in combination with Pathogen you need to place the sources in the
+bundle directory. This can easily be done by cloning the [git repository][1].
 
-Or as a submodule (assuming .vim is a git repository)
+    $ git clone https://github.com/sukima/xmledit.git ~/.vim/bundle/xmledit
 
-    $ cd ~/.vim
-    $ git submodule init
-    $ git submodule add https://github.com/sukima/xmledit.git bundle/
-    $ git submodule update
+Instead of cloning you can use [git submodules][2].
+
+Do not use the `xmledit.vba` file with pathogen.
+
+
+Build
+-----
+Run the Makefile to build the vba file.
+
+    $ make
+
+Now send it to all your friends.
+
+Testing
+-------
+The test environment is in the `tests` directory. It uses RSpec and
+[vimrunner](https://github.com/AndrewRadev/vimrunner). Execute the test suite:
+
+    $ bundle install
+    $ rake
+
+More information about testing in vim can be found at
+[this blog post](http://mudge.name/2012/04/18/testing-vim-plugins-on-travis-ci-with-rspec-and-vimrunner.html).
 
 Using With Other File Types
 ---------------------------
