@@ -119,6 +119,56 @@ endfunction
 endif
 
 
+" IncreaseCommentLevel -> Wrap selection in comments, fix nested comments. {{{1
+if !exists("*s:IncreaseCommentLevel")
+function s:IncreaseCommentLevel( )
+    " Visual block mode is not supported yet.
+    if (visualmode() !=# 'v' && visualmode() !=# 'V')
+        return
+    endif
+    let oldvreg = getreg('v')
+    let oldvregtype = getregtype('v')
+    normal! gv"vy
+    let commblock = getreg('v')
+    " Increase depth level of existing nested comment blocks.
+    let commblock = substitute(commblock, '<!{\([0-9]\+\)}\*\*', '\="<!{".(submatch(1) + 1)."}**"', 'g')
+    let commblock = substitute(commblock, '\*\*{\([0-9]\+\)}>', '\="**{".(submatch(1) + 1)."}>"', 'g')
+    " Replace existing comment tags with a level placeholder.
+    let commblock = substitute(commblock, '<!--', '<!{1}**', 'g')
+    let commblock = substitute(commblock, '-->', '**{1}>', 'g')
+    let commblock = '<!--' . commblock . '-->'
+    call setreg('v', commblock, visualmode())
+    normal! gv"vp
+    call setreg("v", oldvreg, oldvregtype)
+endfunction
+endif
+
+
+" DecreaseCommentLevel -> Removes comment tags from selection, fix nested comments. {{{1
+if !exists("*s:DecreaseCommentLevel")
+function s:DecreaseCommentLevel( )
+    " Visual block mode is not supported yet.
+    if (visualmode() !=# 'v' && visualmode() !=# 'V')
+        return
+    endif
+    let oldvreg = getreg('v')
+    let oldvregtype = getregtype('v')
+    normal! gv"vy
+    let commblock = getreg('v')
+    let commblock = substitute(commblock, '<!--\|-->', '', 'g')
+    " Decrease depth level of existing nested comment blocks.
+    let commblock = substitute(commblock, '<!{\([0-9]\+\)}\*\*', '\="<!{".(submatch(1) - 1)."}**"', 'g')
+    let commblock = substitute(commblock, '\*\*{\([0-9]\+\)}>', '\="**{".(submatch(1) - 1)."}>"', 'g')
+    " Restore comment tags which have dropped to level 0.
+    let commblock = substitute(commblock, '<!{0}\*\*', '<!--', 'g')
+    let commblock = substitute(commblock, '\*\*{0}>', '-->', 'g')
+    call setreg('v', commblock, visualmode())
+    normal! gv"vp
+    call setreg("v", oldvreg, oldvregtype)
+endfunction
+endif
+
+
 " Callback -> Checks for tag callbacks and executes them.            {{{1
 if !exists("*s:Callback")
 function s:Callback( xml_tag, isHtml )
@@ -588,6 +638,10 @@ vnoremap <buffer> <LocalLeader>% <Esc>:call <SID>VisualTag()<Cr>
 " Wrap selection in XML tag
 vnoremap <buffer> <LocalLeader>x "xx:call <SID>WrapTag(@x)<Cr>
 nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
+
+" Comment selection
+vnoremap <buffer> <LocalLeader>c <Esc>:call <SID>IncreaseCommentLevel()<CR>
+vnoremap <buffer> <LocalLeader>u <Esc>:call <SID>DecreaseCommentLevel()<CR>
 
 " Parse the tag after pressing the close '>'.
 if !exists("g:xml_tag_completion_map")

@@ -12,7 +12,8 @@ or end of the tag block your cursor is in. '%' will jump between '<' and '>'
 within the tag your cursor is in. When in insert mode and you finish a tag
 (pressing '>') the tag will be completed. If you press '>' twice it will
 complete the tag and place the cursor in the middle of the tags on it's own
-line (helps with nested tags).
+line (helps with nested tags). It might also help with quickly commenting
+out parts of your documents.
 
 Usage: Place this file into your ftplugin directory. To add html support
 Sym-link or copy this file to html.vim in your ftplugin directory. To activate
@@ -29,14 +30,14 @@ ex. <hr> becomes <hr /> (see |xml-plugin-settings|)
 
 NOTE: If you used the VIM 5.x version of this file (xmledit.vim) you'll need
 to comment out the section where you called it. It is no longer used in the
-VIM 6.x version. 
+VIM 6.x version.
 
 To disable the plugin (especially for systems that include this plugin as part
-of the distrobution) you can use the following line in your .vimrc:
+of the distribution) you can use the following line in your .vimrc:
 >
     let loaded_xmledit = 1
 <
-Known Bugs 
+Known Bugs
 
 - This script will modify registers ". and "x; register "" will be restored.
 - < & > marks inside of a CDATA section are interpreted as actual XML tags
@@ -44,14 +45,14 @@ Known Bugs
 - Although the script can handle leading spaces such as < tag></ tag> it is
   illegal XML syntax and considered very bad form.
 - Placing a literal `>' in an attribute value will auto complete despite that
-  the start tag isn't finished. This is poor XML anyway you should use
+  the start tag isn't finished. This is poor XML anyway, you should use
   &gt; instead.
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
 ------------------------------------------------------------------------------
                                                          *xml-plugin-mappings*
-Mappings 
+Mappings
 
 <LocalLeader> is a setting in VIM that depicts a prefix for scripts and
 plugins to use. By default this is the backslash key `\'. See |mapleader|
@@ -89,9 +90,21 @@ for details.
             ^
 <
 
+<LocalLeader>c
+        Visual - Wraps the current selection in comment tags and preserves
+        existing comments by substituting placeholders. You need to have
+        selected text in visual mode before you can use this mapping. See
+        |visual-mode| for details. Visual block mode isn't supported yet.
+
+<LocalLeader>u
+        Visual - Removes the comment tags in the current selection and
+        restores existing comments by substituting placeholders. You need to
+        have selected text in visual mode before you can use this mapping. See
+        |visual-mode| for details. Visual block mode isn't supported yet.
+
 ------------------------------------------------------------------------------
                                                          *xml-plugin-settings*
-Options 
+Options
 
 (All options must be placed in your |.vimrc| prior to the |ftplugin|
 command.)
@@ -174,7 +187,7 @@ the attributes for you. The example in |xml-plugin-html| shows how to do this
 with HTML files.
 ------------------------------------------------------------------------------
                                                         *xml-plugin-callbacks*
-Callback Functions 
+Callback Functions
 
 A callback function is a function used to customize features on a per tag
 basis. For example say you wish to have a default set of attributes when you
@@ -200,7 +213,7 @@ XmlAttribCallback
         This is a generic callback for xml tags intended to add attributes.
 
                                                              *xml-plugin-html*
-Callback Example 
+Callback Example
 
 The following is an example of using XmlAttribCallback in your .vimrc
 >
