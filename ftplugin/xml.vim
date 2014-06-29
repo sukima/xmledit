@@ -126,6 +126,8 @@ function s:IncreaseCommentLevel( )
     if (visualmode() !=# 'v' && visualmode() !=# 'V')
         return
     endif
+    let iscursoratend = (line(".") ==# line("'>"))
+    setlocal report=99999
     let oldvreg = getreg('v')
     let oldvregtype = getregtype('v')
     normal! gv"vy
@@ -138,8 +140,13 @@ function s:IncreaseCommentLevel( )
     let commblock = substitute(commblock, '-->', '**{1}>', 'g')
     let commblock = '<!--' . commblock . '-->'
     call setreg('v', commblock, visualmode())
-    normal! gv"vp
+    normal! gv"vpgv
+    " Fix selection direction and cursor position.
+    if ((iscursoratend && line(".") ==# line("'<")) || ( ! iscursoratend && line(".") ==# line("'>")))
+        normal! o
+    endif
     call setreg("v", oldvreg, oldvregtype)
+    set report&
 endfunction
 endif
 
@@ -151,6 +158,8 @@ function s:DecreaseCommentLevel( )
     if (visualmode() !=# 'v' && visualmode() !=# 'V')
         return
     endif
+    let iscursoratend = (getpos(".") ==# getpos("'>"))
+    setlocal report=99999
     let oldvreg = getreg('v')
     let oldvregtype = getregtype('v')
     normal! gv"vy
@@ -163,10 +172,16 @@ function s:DecreaseCommentLevel( )
     let commblock = substitute(commblock, '<!{0}\*\*', '<!--', 'g')
     let commblock = substitute(commblock, '\*\*{0}>', '-->', 'g')
     call setreg('v', commblock, visualmode())
-    normal! gv"vp
+    normal! gv"vpgv
+    " Fix selection direction and cursor position.
+    if ((iscursoratend && line(".") ==# line("'<")) || ( ! iscursoratend && line(".") ==# line("'>")))
+        normal! o
+    endif
     call setreg("v", oldvreg, oldvregtype)
+    set report&
 endfunction
 endif
+
 
 
 " Callback -> Checks for tag callbacks and executes them.            {{{1
