@@ -127,6 +127,7 @@ function s:IncreaseCommentLevel( )
         return
     endif
     let iscursoratend = (line(".") ==# line("'>"))
+    let indent = matchstr(getline("'<"), '\%^\s*')
     setlocal report=99999
     let oldvreg = getreg('v')
     let oldvregtype = getregtype('v')
@@ -138,7 +139,11 @@ function s:IncreaseCommentLevel( )
     " Replace existing comment tags with a level placeholder.
     let commblock = substitute(commblock, '<!--', '<!{1}**', 'g')
     let commblock = substitute(commblock, '-->', '**{1}>', 'g')
-    let commblock = '<!--' . commblock . '-->'
+    if (visualmode() ==# 'V')
+        let commblock = indent . "<!--\n" . commblock . indent . "-->\n"
+    else
+        let commblock = '<!--' . commblock . '-->'
+    endif
     call setreg('v', commblock, visualmode())
     normal! gv"vpgv
     " Fix selection direction and cursor position.
@@ -158,13 +163,20 @@ function s:DecreaseCommentLevel( )
     if (visualmode() !=# 'v' && visualmode() !=# 'V')
         return
     endif
+    " If end or begin comment is on a newline, switch to Visual line mode
+    if (visualmode() ==# 'v'
+                \ && (getline("'<") =~# '^\s*<!--\s*$' || getline("'>") =~# '^\s*-->\s*$'))
+        execute "normal!" "\<ESC>gvV\<ESC>"
+        "return
+    endif
     let iscursoratend = (getpos(".") ==# getpos("'>"))
     setlocal report=99999
     let oldvreg = getreg('v')
     let oldvregtype = getregtype('v')
     normal! gv"vy
     let commblock = getreg('v')
-    let commblock = substitute(commblock, '<!--\|-->', '', 'g')
+    " Remove comment tags, make sure to remove would-be-empty lines as well.
+    let commblock = substitute(commblock, '\(^\|\n\)\zs\s*<!--\n\|\n\zs\s*-->\n\|<!--\|-->', '', 'g')
     " Decrease depth level of existing nested comment blocks.
     let commblock = substitute(commblock, '<!{\([0-9]\+\)}\*\*', '\="<!{".(submatch(1) - 1)."}**"', 'g')
     let commblock = substitute(commblock, '\*\*{\([0-9]\+\)}>', '\="**{".(submatch(1) - 1)."}>"', 'g')
