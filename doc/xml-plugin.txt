@@ -12,7 +12,8 @@ or end of the tag block your cursor is in. '%' will jump between '<' and '>'
 within the tag your cursor is in. When in insert mode and you finish a tag
 (pressing '>') the tag will be completed. If you press '>' twice it will
 complete the tag and place the cursor in the middle of the tags on it's own
-line (helps with nested tags).
+line (helps with nested tags). It might also help with quickly commenting
+out parts of your documents.
 
 Usage: Place this file into your ftplugin directory. To add html support
 Sym-link or copy this file to html.vim in your ftplugin directory. To activate
@@ -29,14 +30,14 @@ ex. <hr> becomes <hr /> (see |xml-plugin-settings|)
 
 NOTE: If you used the VIM 5.x version of this file (xmledit.vim) you'll need
 to comment out the section where you called it. It is no longer used in the
-VIM 6.x version. 
+VIM 6.x version.
 
 To disable the plugin (especially for systems that include this plugin as part
-of the distrobution) you can use the following line in your .vimrc:
+of the distribution) you can use the following line in your .vimrc:
 >
     let loaded_xmledit = 1
 <
-Known Bugs 
+Known Bugs
 
 - This script will modify registers ". and "x; register "" will be restored.
 - < & > marks inside of a CDATA section are interpreted as actual XML tags
@@ -44,14 +45,14 @@ Known Bugs
 - Although the script can handle leading spaces such as < tag></ tag> it is
   illegal XML syntax and considered very bad form.
 - Placing a literal `>' in an attribute value will auto complete despite that
-  the start tag isn't finished. This is poor XML anyway you should use
+  the start tag isn't finished. This is poor XML anyway, you should use
   &gt; instead.
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
 ------------------------------------------------------------------------------
                                                          *xml-plugin-mappings*
-Mappings 
+Mappings
 
 <LocalLeader> is a setting in VIM that depicts a prefix for scripts and
 plugins to use. By default this is the backslash key `\'. See |mapleader|
@@ -89,9 +90,76 @@ for details.
             ^
 <
 
+<LocalLeader>c
+        Visual - Wraps the current selection in comment tags and preserves
+        existing comments by substituting placeholders. You need to have
+        selected text in visual mode before you can use this mapping. See
+        |visual-mode| for details. Visual block mode isn't supported yet.
+
+        If you are in visual mode, comment tags will be placed before and after
+        your selection. If you are in visual line mode, the comment tags will
+        be placed on a new line before and after the selection.
+
+        *Note:* This mapping might conflict with NERDCommenter or similar
+        plugins. This plugin will not override any existing mappings, but you
+        might want to disable them if the plugin load order is special. See
+        |xml-plugin-settings| for the 'xml_no_comment_map' setting and how to
+        use different keys. 
+
+        Given the following XML: >
+            <config>
+                <!-- Global settings. -->
+                <settings>
+                    <!-- ignores case -->
+                    <ic>true</ic>
+                    <!-- shiftwidth -->
+                    <sw>4</sw>
+                </settings>
+            </config>
+<
+        Example for commenting the "settings" ellement when in visual mode: >
+            <config>
+                <!-- Global settings. -->
+                <!--<settings>
+                    <!{1}** ignores case **{1}>
+                    <ic>true</ic>
+                    <!{1}** shiftwidth **{1}>
+                    <sw>4</sw>
+                </settings>-->
+            </config>
+<
+        Example for commenting out the config element for the previous XML
+        using visual line mode: >
+            <!--
+            <config>
+                <!{1}** Global settings. **{1}>
+                <!{1}**<settings>
+                    <!{2}** ignores case **{2}>
+                    <ic>true</ic>
+                    <!{2}** shiftwidth **{2}>
+                    <sw>4</sw>
+                </settings>**{1}>
+            </config>
+            -->
+<
+        Uncommenting will restore the nested comments back to their original
+        state.
+
+<LocalLeader>u
+        Visual - Removes the comment tags in the current selection and
+        restores existing comments by substituting placeholders. You need to
+        have selected text in visual mode before you can use this mapping. See
+        |visual-mode| for details. Visual block mode isn't supported yet.
+
+        *Note:* This mapping might conflict with NERDCommenter or similar
+        plugins. This plugin will not override any existing mappings, but you
+        might want to disable them if the plugin load order is special. See
+        |xml-plugin-settings| for the 'xml_no_comment_map' setting and how to
+        use different keys. 
+
 ------------------------------------------------------------------------------
                                                          *xml-plugin-settings*
-Options 
+Options
 
 (All options must be placed in your |.vimrc| prior to the |ftplugin|
 command.)
@@ -105,6 +173,15 @@ xml_tag_completion_map
         you wanted Control-L to perform auto completion instead of typing a
         `>' place the following into your .vimrc: >
             let xml_tag_completion_map = "<C-l>"
+<
+xml_no_comment_map
+        By default the XML plugin will conditionally map `<LocalLeader>c` and
+        `<LocalLeader>u` but that first mapping might conflict with
+        plugins like NERDCommenter. To disable the mappings or to define your
+        own, place the following (or just the first line) into your .vimrc: >
+            let xml_no_comment_map=1
+            vmap <LocalLeader>xc <Plug>(XMLEditWrapComment)
+            vmap <LocalLeader>xu <Plug>(XMLEditUnwrapComment)
 <
 xml_tag_syntax_prefixes
         Sets a pattern that is used to distinguish XML syntax elements that
@@ -174,7 +251,7 @@ the attributes for you. The example in |xml-plugin-html| shows how to do this
 with HTML files.
 ------------------------------------------------------------------------------
                                                         *xml-plugin-callbacks*
-Callback Functions 
+Callback Functions
 
 A callback function is a function used to customize features on a per tag
 basis. For example say you wish to have a default set of attributes when you
@@ -200,7 +277,7 @@ XmlAttribCallback
         This is a generic callback for xml tags intended to add attributes.
 
                                                              *xml-plugin-html*
-Callback Example 
+Callback Example
 
 The following is an example of using XmlAttribCallback in your .vimrc
 >

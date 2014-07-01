@@ -119,6 +119,83 @@ endfunction
 endif
 
 
+" IncreaseCommentLevel -> Wrap selection in comments, fix nested comments. {{{1
+if !exists("*s:IncreaseCommentLevel")
+function s:IncreaseCommentLevel( )
+    " Visual block mode is not supported yet.
+    if (visualmode() !=# 'v' && visualmode() !=# 'V')
+        return
+    endif
+    let iscursoratend = (line(".") ==# line("'>"))
+    let indent = matchstr(getline("'<"), '\%^\s*')
+    setlocal report=99999
+    let oldvreg = getreg('v')
+    let oldvregtype = getregtype('v')
+    normal! gv"vy
+    let commblock = getreg('v')
+    " Increase depth level of existing nested comment blocks.
+    let commblock = substitute(commblock, '<!{\([0-9]\+\)}\*\*', '\="<!{".(submatch(1) + 1)."}**"', 'g')
+    let commblock = substitute(commblock, '\*\*{\([0-9]\+\)}>', '\="**{".(submatch(1) + 1)."}>"', 'g')
+    " Replace existing comment tags with a level placeholder.
+    let commblock = substitute(commblock, '<!--', '<!{1}**', 'g')
+    let commblock = substitute(commblock, '-->', '**{1}>', 'g')
+    if (visualmode() ==# 'V')
+        let commblock = indent . "<!--\n" . commblock . indent . "-->\n"
+    else
+        let commblock = '<!--' . commblock . '-->'
+    endif
+    call setreg('v', commblock, visualmode())
+    normal! gv"vpgv
+    " Fix selection direction and cursor position.
+    if ((iscursoratend && line(".") ==# line("'<")) || ( ! iscursoratend && line(".") ==# line("'>")))
+        normal! o
+    endif
+    call setreg("v", oldvreg, oldvregtype)
+    set report&
+endfunction
+endif
+
+
+" DecreaseCommentLevel -> Removes comment tags from selection, fix nested comments. {{{1
+if !exists("*s:DecreaseCommentLevel")
+function s:DecreaseCommentLevel( )
+    " Visual block mode is not supported yet.
+    if (visualmode() !=# 'v' && visualmode() !=# 'V')
+        return
+    endif
+    " If end or begin comment is on a newline, switch to Visual line mode
+    if (visualmode() ==# 'v'
+                \ && (getline("'<") =~# '^\s*<!--\s*$' || getline("'>") =~# '^\s*-->\s*$'))
+        execute "normal!" "\<ESC>gvV\<ESC>"
+        "return
+    endif
+    let iscursoratend = (getpos(".") ==# getpos("'>"))
+    setlocal report=99999
+    let oldvreg = getreg('v')
+    let oldvregtype = getregtype('v')
+    normal! gv"vy
+    let commblock = getreg('v')
+    " Remove comment tags, make sure to remove would-be-empty lines as well.
+    let commblock = substitute(commblock, '\(^\|\n\)\zs\s*<!--\n\|\n\zs\s*-->\n\|<!--\|-->', '', 'g')
+    " Decrease depth level of existing nested comment blocks.
+    let commblock = substitute(commblock, '<!{\([0-9]\+\)}\*\*', '\="<!{".(submatch(1) - 1)."}**"', 'g')
+    let commblock = substitute(commblock, '\*\*{\([0-9]\+\)}>', '\="**{".(submatch(1) - 1)."}>"', 'g')
+    " Restore comment tags which have dropped to level 0.
+    let commblock = substitute(commblock, '<!{0}\*\*', '<!--', 'g')
+    let commblock = substitute(commblock, '\*\*{0}>', '-->', 'g')
+    call setreg('v', commblock, visualmode())
+    normal! gv"vpgv
+    " Fix selection direction and cursor position.
+    if ((iscursoratend && line(".") ==# line("'<")) || ( ! iscursoratend && line(".") ==# line("'>")))
+        normal! o
+    endif
+    call setreg("v", oldvreg, oldvregtype)
+    set report&
+endfunction
+endif
+
+
+
 " Callback -> Checks for tag callbacks and executes them.            {{{1
 if !exists("*s:Callback")
 function s:Callback( xml_tag, isHtml )
@@ -588,6 +665,17 @@ vnoremap <buffer> <LocalLeader>% <Esc>:call <SID>VisualTag()<Cr>
 " Wrap selection in XML tag
 vnoremap <buffer> <LocalLeader>x "xx:call <SID>WrapTag(@x)<Cr>
 nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
+
+" Comment selection
+vnoremap <buffer> <Plug>(XMLEditWrapComment) <Esc>:call <SID>IncreaseCommentLevel()<CR>
+vnoremap <buffer> <Plug>(XMLEditUnwrapComment) <Esc>:call <SID>DecreaseCommentLevel()<CR>
+" The LocalLeader mappings might conflict. Don't map if a binding exists.
+if !exists("g:xml_no_comment_map") && empty(maparg("<LocalLeader>c", "v"))
+    vmap <buffer> <LocalLeader>c <Plug>(XMLEditWrapComment)
+endif
+if !exists("g:xml_no_comment_map") && empty(maparg("<LocalLeader>u", "v"))
+    vmap <buffer> <LocalLeader>u <Plug>(XMLEditUnwrapComment)
+endif
 
 " Parse the tag after pressing the close '>'.
 if !exists("g:xml_tag_completion_map")
