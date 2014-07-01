@@ -667,8 +667,15 @@ vnoremap <buffer> <LocalLeader>x "xx:call <SID>WrapTag(@x)<Cr>
 nnoremap <buffer> <LocalLeader>d :call <SID>DeleteTag()<Cr>
 
 " Comment selection
-vnoremap <buffer> <LocalLeader>c <Esc>:call <SID>IncreaseCommentLevel()<CR>
-vnoremap <buffer> <LocalLeader>u <Esc>:call <SID>DecreaseCommentLevel()<CR>
+vnoremap <buffer> <Plug>(XMLEditWrapComment) <Esc>:call <SID>IncreaseCommentLevel()<CR>
+vnoremap <buffer> <Plug>(XMLEditUnwrapComment) <Esc>:call <SID>DecreaseCommentLevel()<CR>
+" The LocalLeader mappings might conflict. Don't map if a binding exists.
+if !exists("g:xml_no_comment_map") && empty(maparg("<LocalLeader>c", "v"))
+    vmap <buffer> <LocalLeader>c <Plug>(XMLEditWrapComment)
+endif
+if !exists("g:xml_no_comment_map") && empty(maparg("<LocalLeader>u", "v"))
+    vmap <buffer> <LocalLeader>u <Plug>(XMLEditUnwrapComment)
+endif
 
 " Parse the tag after pressing the close '>'.
 if !exists("g:xml_tag_completion_map")
