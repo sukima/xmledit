@@ -97,8 +97,14 @@ for details.
         |visual-mode| for details. Visual block mode isn't supported yet.
 
         If you are in visual mode, comment tags will be placed before and after
-        your selection. If you are in visual line mode, the comment tags will be
-        placed on a new line before and after the selection.
+        your selection. If you are in visual line mode, the comment tags will
+        be placed on a new line before and after the selection.
+
+        *Note:* This mapping might conflict with NERDCommenter or similar
+        plugins. This plugin will not override any existing mappings, but you
+        might want to disable them if the plugin load order is special. See
+        |xml-plugin-settings| for the 'xml_no_comment_map' setting and how to
+        use different keys. 
 
         Given the following XML: >
             <config>
@@ -145,6 +151,12 @@ for details.
         have selected text in visual mode before you can use this mapping. See
         |visual-mode| for details. Visual block mode isn't supported yet.
 
+        *Note:* This mapping might conflict with NERDCommenter or similar
+        plugins. This plugin will not override any existing mappings, but you
+        might want to disable them if the plugin load order is special. See
+        |xml-plugin-settings| for the 'xml_no_comment_map' setting and how to
+        use different keys. 
+
 ------------------------------------------------------------------------------
                                                          *xml-plugin-settings*
 Options
@@ -161,6 +173,15 @@ xml_tag_completion_map
         you wanted Control-L to perform auto completion instead of typing a
         `>' place the following into your .vimrc: >
             let xml_tag_completion_map = "<C-l>"
+<
+xml_no_comment_map
+        By default the XML plugin will conditionally map `<LocalLeader>c` and
+        `<LocalLeader>u` but that first mapping might conflict with
+        plugins like NERDCommenter. To disable the mappings or to define your
+        own, place the following (or just the first line) into your .vimrc: >
+            let xml_no_comment_map=1
+            vmap <LocalLeader>xc <Plug>(XMLEditWrapComment)
+            vmap <LocalLeader>xu <Plug>(XMLEditUnwrapComment)
 <
 xml_tag_syntax_prefixes
         Sets a pattern that is used to distinguish XML syntax elements that
