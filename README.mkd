@@ -113,16 +113,25 @@ the following to your `.vimrc` as suggested by @othree in [issue #15][4]:
 How to contribute
 -----------------
 
-Contributions are through [Github][1] or via patches. I invite anyone
-interested to feel free to modify to your hearts content. If your modifications
-would be useful to others please send me a Pull Request.
+Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.
 
-I handle maintinance in the following priority:
+## Rules
 
-1. Pull Requests and patches will be looked at in a much high priority then
-   anything else. I <3 pull requests.
-2. Issue reports are taken for reference but I don't do much with them hoping
-   instead for a pull request or patch.
+There are a few basic ground-rules for contributors:
+
+1. **No `--force` pushes** or modifying the Git history in any way.
+1. **Non-master branches** ought to be used for ongoing work.
+1. **External API changes and significant modifications** ought to be subject to an **internal pull-request** to solicit feedback from other contributors.
+1. Internal pull-requests to solicit feedback are *encouraged* for any other non-trivial contribution but left to the discretion of the contributor.
+1. Contributors should attempt to adhere to the prevailing code-style.
+
+## Releases
+
+Declaring formal releases remains the prerogative of the project maintainer.
+
+## Changes to this arrangement
+
+This is an experiment and feedback is welcome! This document may also be subject to pull-requests or changes by contributors where you believe you have something valuable to add or change.
 
 I am in need of unit tests. Anyone interested in helping please fork and add to
 the `tests/spec/` directory.
