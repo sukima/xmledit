@@ -45,8 +45,7 @@ Known Bugs
 - Although the script can handle leading spaces such as < tag></ tag> it is
   illegal XML syntax and considered very bad form.
 - Placing a literal `>' in an attribute value will auto complete despite that
-  the start tag isn't finished. This is poor XML anyway, you should use
-  &gt; instead.
+  the start tag isn't finished. You could try using &gt; instead.
 - The matching algorithm can handle illegal tag characters where as the tag
   completion algorithm can not.
 
