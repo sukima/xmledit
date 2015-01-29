@@ -1,90 +1,220 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-	<title>sukima/xmledit @ GitHub</title>
-	
-	<style type="text/css">
-		body {
-  		margin-top: 1.0em;
-  		background-color: #c274ec;
-		  font-family: "Helvetica,Arial,FreeSans"; 
-  		color: #000000;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-		h1 { font-size: 3.8em; color: #3d8b13; margin-bottom: 3px; }
-		h1 .small { font-size: 0.4em; }
-		h1 a { text-decoration: none }
-		h2 { font-size: 1.5em; color: #3d8b13; }
-    h3 { text-align: center; color: #3d8b13; }
-    a { color: #3d8b13; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-		pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-	</style>
-	
-</head>
+    <title>Xmledit by sukima</title>
+  </head>
 
-<body>
-  <a href="http://github.com/sukima/xmledit"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-  
-  <div id="container">
+  <body>
 
-    <div class="download">
-      <a href="http://github.com/sukima/xmledit/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/sukima/xmledit/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    <header>
+      <div class="container">
+        <h1>Xmledit</h1>
+        <h2>A filetype plugin for VIM to help edit XML files</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/sukima/xmledit/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/sukima/xmledit/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/sukima/xmledit" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="xml-plugin" class="anchor" href="#xml-plugin" aria-hidden="true"><span class="octicon octicon-link"></span></a>xml-plugin</h1>
+
+<p>Maintainer: Devin Weaver <a href="mailto:suki@tritarget.org">suki@tritarget.org</a><br>
+Source: <a href="http://github.com/sukima/xmledit">http://github.com/sukima/xmledit</a><br>
+Homepage: <a href="http://www.vim.org/scripts/script.php?script_id=301">http://www.vim.org/scripts/script.php?script_id=301</a><br>
+Version: 1.10.5</p>
+
+<p><a href="https://travis-ci.org/sukima/xmledit"><img src="https://travis-ci.org/sukima/xmledit.png?branch=master" alt="Build Status"></a></p>
+
+<p>XML Edit is a file type plugin to help edit XML documents.
+It includes tag completion and tag jumping.</p>
+
+<h2>
+<a id="licence" class="anchor" href="#licence" aria-hidden="true"><span class="octicon octicon-link"></span></a>Licence</h2>
+
+<p>This program is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public
+License.<br>
+See <a href="http://www.gnu.org/copyleft/gpl.txt">http://www.gnu.org/copyleft/gpl.txt</a></p>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<p>xmledit can be installed using a <code>xmledit.vba</code> file or using Pathogen.</p>
+
+<h3>
+<a id="installation-using-xmleditvba" class="anchor" href="#installation-using-xmleditvba" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation using <code>xmledit.vba</code>
+</h3>
+
+<p>First you need a <code>xmledit.vba</code> vimball. You can create one following the
+instruction in the <a href="#build">Build</a> section.</p>
+
+<p>If you do not have VIM version 7.0 or higher this will not work. Either upgrade
+or deal with the shaddy old plugin which you can get at
+<a href="http://github.com/sukima/xmledit/tree/v1.84">http://github.com/sukima/xmledit/tree/v1.84</a>. (Alternativly you could manually
+copy the files to there proper locations however older versions of VIM will not
+be supported in future development)</p>
+
+<p>To install the created package open the vba file in vim and source it:</p>
+
+<pre><code>$ vim xmledit.vba
+:so %
+</code></pre>
+
+<p>If you are installing this from the source (you don't have a .vba file) you can
+skip the building of one by running the Makefile:</p>
+
+<pre><code>$ make install
+</code></pre>
+
+<p>Now read doc/xml-plugin.txt or type <code>:help xml-plugin.txt</code> in VIM.</p>
+
+<h3>
+<a id="installation-for-pathogen" class="anchor" href="#installation-for-pathogen" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation for Pathogen</h3>
+
+<p>To use xmledit in combination with Pathogen you need to place the sources in the
+bundle directory. This can easily be done by cloning the <a href="http://github.com/sukima/xmledit">git repository</a>.</p>
+
+<pre><code>$ git clone https://github.com/sukima/xmledit.git ~/.vim/bundle/xmledit
+</code></pre>
+
+<p>Instead of cloning you can use <a href="http://www.kernel.org/pub/software/scm/git/docs/git-submodule.html">git submodules</a>.</p>
+
+<p>Do not use the <code>xmledit.vba</code> file with pathogen.</p>
+
+<h2>
+<a id="build" class="anchor" href="#build" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build</h2>
+
+<p>Run the Makefile to build the vba file.</p>
+
+<pre><code>$ make
+</code></pre>
+
+<p>Now send it to all your friends.</p>
+
+<h2>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Testing</h2>
+
+<p>The test environment is in the <code>tests</code> directory. It uses RSpec and
+<a href="https://github.com/AndrewRadev/vimrunner">vimrunner</a>. Execute the test suite:</p>
+
+<pre><code>$ bundle install
+$ rake
+</code></pre>
+
+<p>More information about testing in vim can be found at
+<a href="http://mudge.name/2012/04/18/testing-vim-plugins-on-travis-ci-with-rspec-and-vimrunner.html">this blog post</a>.</p>
+
+<h2>
+<a id="using-with-other-file-types" class="anchor" href="#using-with-other-file-types" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using With Other File Types</h2>
+
+<p>This can be used with other file types besides XML. There are two ways to
+accomplish this. The plugin can be used as is for other languages or with extra
+features that are language specific via the <em>callback</em> method.</p>
+
+<p>The first method is simply to copy <code>xml.vim</code> or symbolically (or hard) link it
+to the new file type. For example:</p>
+
+<pre><code>ftplugin/
+|-xml.vim
+|-php.vim -&gt; xml.vim
+`-xhtml.vim -&gt; xml.vim
+</code></pre>
+
+<p>The second method expands on the idea of copying. It uses a callback method
+which can extend the functionality of the tags for that language. For example
+in an HTML document you might prefer your table tags to look like this:</p>
+
+<pre><code>&lt;table cellpadding="0" cellspacing="0" border="0"&gt;
+&lt;/table&gt;
+</code></pre>
+
+<p>But by just linking <code>html.vim</code> to <code>xml.vim</code> you would have to type all that in
+every time. The callback could allow you to type just <code>&lt;table&gt;</code> and it would
+add the <code>cellpadding=...</code> attributes for you. The example in the documentation
+(<code>:help xml-plugin-callbacks</code>) shows how to do this with HTML files.</p>
+
+<h2>
+<a id="caveats" class="anchor" href="#caveats" aria-hidden="true"><span class="octicon octicon-link"></span></a>Caveats</h2>
+
+<p>There are conflicts with the <a href="http://www.vim.org/scripts/script.php?script_id=1879">AutoComplPop</a> script. If you get errors, add
+the following to your <code>.vimrc</code> as suggested by <a href="https://github.com/othree" class="user-mention">@othree</a> in <a href="https://github.com/sukima/xmledit/issues/15">issue #15</a>:</p>
+
+<pre><code>autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags noci
+autocmd FileType html set omnifunc=htmlcomplete#CompleteTags noci
+</code></pre>
+
+<h2>
+<a id="how-to-contribute" class="anchor" href="#how-to-contribute" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to contribute</h2>
+
+<p>Individuals making significant and valuable contributions are given commit-access to the project to contribute as they see fit. This project is more like an open wiki than a standard guarded open source project.</p>
+
+<h2>
+<a id="rules" class="anchor" href="#rules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Rules</h2>
+
+<p>There are a few basic ground-rules for contributors:</p>
+
+<ol>
+<li>
+<strong>No <code>--force</code> pushes</strong> or modifying the Git history in any way.</li>
+<li>
+<strong>Non-master branches</strong> ought to be used for ongoing work.</li>
+<li>
+<strong>External API changes and significant modifications</strong> ought to be subject to an <strong>internal pull-request</strong> to solicit feedback from other contributors.</li>
+<li>Internal pull-requests to solicit feedback are <em>encouraged</em> for any other non-trivial contribution but left to the discretion of the contributor.</li>
+<li>Contributors should attempt to adhere to the prevailing code-style.</li>
+</ol>
+
+<h2>
+<a id="releases" class="anchor" href="#releases" aria-hidden="true"><span class="octicon octicon-link"></span></a>Releases</h2>
+
+<p>Declaring formal releases remains the prerogative of the project maintainer.</p>
+
+<h2>
+<a id="changes-to-this-arrangement" class="anchor" href="#changes-to-this-arrangement" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changes to this arrangement</h2>
+
+<p>This is an experiment and feedback is welcome! This document may also be subject to pull-requests or changes by contributors where you believe you have something valuable to add or change.</p>
+
+<p>I am in need of unit tests. Anyone interested in helping please fork and add to
+the <code>tests/spec/</code> directory.</p>
+
+<h2>
+<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<ul>
+<li>Brad Phelan <a href="mailto:bphelan@mathworks.co.uk">bphelan@mathworks.co.uk</a>
+for completing tag matching and visual tag completion.</li>
+<li>Ma, Xiangjiang <a href="mailto:Xiangjiang.Ma@broadvision.com">Xiangjiang.Ma@broadvision.com</a> for
+pointing out VIM 6.0 map <code>&lt;buffer&gt;</code> feature.</li>
+<li>Luc Hermitte <a href="mailto:hermitte@free.fr">hermitte@free.fr</a> for testing the self
+install documentation code and providing good bug fixes.</li>
+<li>Guo-Peng Wen for the self install documentation code.</li>
+<li>Shawn Boles <a href="mailto:ickybots@gmail.com">ickybots@gmail.com</a> for fixing the
+<code>&lt;Leader&gt;x</code> cancelation bug. </li>
+<li>Martijn van der Kwast <a href="mailto:mvdkwast@gmx.net">mvdkwast@gmx.net</a> for patching
+problems with multi-languages (XML and PHP).</li>
+<li>Ilya Bobir <a href="mailto:ilya.bobir@gmail.com">ilya.bobir@gmail.com</a> for patching
+<code>xml_tag_syntax_pefixes</code> option.</li>
+<li>Eli L. <a href="mailto:eli@siliconsprawl.com">eli@siliconsprawl.com</a> for converting to the
+vimball packaging format.</li>
+</ul>
+
+
+      </section>
     </div>
-      
-    <h1><a href="http://github.com/sukima/xmledit">xmledit</a> 
-      <span class="small">by <a href="http://github.com/sukima">sukima</a></span></h1>
 
-    <div class="description">
-      A filetype plugin for VIM to help edit XML files
-    </div>
-
-    <p>XML Edit is a file type plugin to help edit XML documents. It includes tag completion and tag jumping.</p><h2>Dependencies</h2>
-<p>VIM 7.0</p>
-<h2>License</h2>
-<p>Expand or copy these directories to your VIM home. On Unix systems this is `~/.vim` On MS-DOS it is your `$VIM/vimfiles` folder.
-
-On a Unix system, if you wish to make this script avaliable system wide place this package into your $VIMRUNTIME directory.
-
-The documentation will be installed automatically the first time you open or edit an XML file. To do so try `:e test.xml` the first time and it will install the documentation to `<INSTALL_DIR>/doc`
-
-Now read doc/xml-plugin.txt or type `:help xml-plugin.txt` in VIM.</p>
-<h2>Authors</h2>
-<p>Devin Weaver (suki@tritarget.org)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Devin Weaver (suki@tritarget.org)<br/>      </p>
-
-
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="http://github.com/sukima/xmledit/zipball/master">zip</a> or
-      <a href="http://github.com/sukima/xmledit/tarball/master">tar</a> formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/sukima/xmledit</pre>
-    </p>
-      
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/sukima/xmledit">sukima/xmledit</a>
-    </div>
     
-  </div>
-
-  
-</body>
+  </body>
 </html>
