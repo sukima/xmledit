@@ -562,10 +562,10 @@ function s:InsertGt( )
   " This is useful while using a plugin like delimitMate
   " or a inoremap which autocompletes the closing >
   " otherwise, an excess '>' is added
-  if (getline('.')[col('.') - 1 ] == '<')
+  if (getline('.')[col('.')] == '<')
     " Nest the tags
     execute "normal! li>"
-  elseif (getline('.')[col('.') - 1] == '>')
+  elseif (getline('.')[col('.')] == '>')
     " closing > exists
     execute "normal! la"
   else
