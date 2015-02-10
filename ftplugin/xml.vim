@@ -317,8 +317,12 @@ function s:ParseTag( )
     if multi_line || do_append_for_xhtml
         startinsert!
     else
-        execute "normal! l"
-        startinsert
+        if col(".") == col("$") - 1
+            startinsert!
+        else
+            execute "normal! l"
+            startinsert
+        endif
     endif
 endfunction
 endif
