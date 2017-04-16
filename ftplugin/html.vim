@@ -7,10 +7,10 @@
 " Original script can be seen in xml-plugin documentation.
 
 " Only do this when not done yet for this buffer
-if exists("b:did_ftplugin") || (!exists ("g:xmledit_enable_html")) || g:xmledit_enable_html != 1
+if exists("b:did_xmledit_ftplugin") || (!exists ("g:xmledit_enable_html")) || g:xmledit_enable_html != 1
     finish
 endif
-" Don't set 'b:did_ftplugin = 1' because that is xml.vim's responsability.
+" Don't set 'b:did_xmledit_ftplugin = 1' because that is xml.vim's responsability.
 
 let b:html_mode = 1
 
