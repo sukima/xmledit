@@ -276,7 +276,7 @@ function s:ParseTag( )
         let index = index + 2
 
         " print out the end tag and place the cursor back were it left off
-        if html_mode && tag_name =~? '^\(img\|input\|param\|frame\|br\|hr\|meta\|link\|base\|area\)$'
+        if html_mode && tag_name =~? '^\(img\|input\|param\|frame\|br\|hr\|meta\|link\|base\|area\|source\)$'
             if has_attrib == 0
                 call <SID>Callback (tag_name, html_mode)
             endif
